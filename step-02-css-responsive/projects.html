@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<!-- STEP 2: Advanced CSS3 & Responsive Architecture - Full styling with Grid, Flexbox, CSS Variables, Dark Mode -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Projects by Alex Johnson — Full-stack web apps, frontend tools, and open-source contributions." />
+  <meta name="author" content="Alex Johnson" />
+
+  <title>Projects | Alex Johnson</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Page-specific styles for Projects page ─────────────────────────── */
+
+    /* Filter button group */
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border: 2px solid var(--color-border);
+      border-radius: 9999px;
+      background: var(--color-surface);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .filter-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      padding: 2rem;
+      background: var(--color-surface);
+      border-radius: var(--radius-xl);
+      margin-bottom: 4rem;
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      font-weight: 500;
+      margin-top: 0.25rem;
+    }
+
+    /* Project status badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 8px;
+      border-radius: 9999px;
+    }
+
+    .status-badge--live {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-badge--wip {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-badge--archived {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    [data-theme="dark"] .status-badge--live     { background: #064e3b; color: #6ee7b7; }
+    [data-theme="dark"] .status-badge--wip      { background: #451a03; color: #fcd34d; }
+    [data-theme="dark"] .status-badge--archived { background: #1e293b; color: #94a3b8; }
+
+    /* Dot indicator on status badge */
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      display: inline-block;
+    }
+
+    /* GitHub stars mock indicator */
+    .stars {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    /* "Open Source" banner on applicable cards */
+    .opensource-ribbon {
+      position: absolute;
+      top: 1rem;
+      right: -0.5rem;
+      background: var(--color-success);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 3px 12px;
+      border-radius: 4px 0 0 4px;
+    }
+
+    /* Card image needs position:relative for ribbon */
+    .project-card__image {
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       SITE HEADER
+       ════════════════════════════════════════════════════════════════════════ -->
+  <header class="site-header" id="site-header">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+
+      <a href="index.html" class="nav__logo" aria-label="Alex Johnson — Home">
+        Alex<span style="opacity:0.7">J</span>
+      </a>
+
+      <button
+        class="nav__hamburger"
+        id="nav-toggle"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+
+      <ul class="nav__links" id="nav-links" role="list">
+        <li><a href="index.html" class="nav__link">Home</a></li>
+        <li><a href="about.html" class="nav__link">About</a></li>
+        <li><a href="projects.html" class="nav__link" aria-current="page">Projects</a></li>
+        <li><a href="contact.html" class="nav__link">Contact</a></li>
+      </ul>
+
+      <div class="nav__controls">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+      </div>
+
+    </nav>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ════════════════════════════════════════════════════════════════════════ -->
+  <main class="main" id="main-content">
+
+    <!-- Page Banner -->
+    <section
+      class="section"
+      style="
+        background: linear-gradient(135deg, rgba(79,70,229,0.08) 0%, rgba(6,182,212,0.06) 100%),
+                    var(--color-bg);
+        padding-top: calc(var(--header-height) + 4rem);
+        padding-bottom: 3rem;
+        text-align: center;
+      "
+      aria-labelledby="page-heading"
+    >
+      <div class="container">
+        <h1 id="page-heading" class="section-title" style="font-size:clamp(2rem,5vw,3.5rem);">
+          My Projects
+        </h1>
+        <p class="section-subtitle">
+          Things I've built to solve real problems, learn new skills, or just
+          because they seemed cool at the time.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── STATS BAR ─────────────────────────────────────────────────────── -->
+    <section class="section" style="padding-top:1rem; padding-bottom:1rem;" aria-label="Portfolio statistics">
+      <div class="container">
+        <div class="stats-bar" role="list">
+          <div class="stat-item" role="listitem">
+            <span class="stat-number">12+</span>
+            <span class="stat-label">Projects Built</span>
+          </div>
+          <div class="stat-item" role="listitem">
+            <span class="stat-number">5</span>
+            <span class="stat-label">Open Source</span>
+          </div>
+          <div class="stat-item" role="listitem">
+            <span class="stat-number">3</span>
+            <span class="stat-label">Live Apps</span>
+          </div>
+          <div class="stat-item" role="listitem">
+            <span class="stat-number">2k+</span>
+            <span class="stat-label">GitHub Stars</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PROJECTS GRID ─────────────────────────────────────────────────── -->
+    <!--
+      CSS Grid with auto-fit + minmax creates a RESPONSIVE grid
+      WITHOUT JavaScript or media queries!
+      
+      How it works:
+      repeat(auto-fit, minmax(300px, 1fr))
+      - auto-fit: Create as many columns as will fit in the row
+      - minmax(300px, 1fr): Each column ≥ 300px, share remaining space equally
+      - Result: 1 col on phone, 2 on tablet, 3 on desktop — automatically!
+    -->
+    <section class="projects section" id="projects" aria-labelledby="projects-heading">
+      <div class="container">
+
+        <header class="section-header">
+          <h2 class="section-title" id="projects-heading">All Projects</h2>
+          <p class="section-subtitle">
+            Hover a card to see it lift. Click links to explore.
+          </p>
+        </header>
+
+        <!-- Filter Buttons (UI only — JS filtering is Step 4) -->
+        <div class="filter-group" role="group" aria-label="Filter projects by category">
+          <button class="filter-btn active" aria-pressed="true">All</button>
+          <button class="filter-btn" aria-pressed="false">Full Stack</button>
+          <button class="filter-btn" aria-pressed="false">Frontend</button>
+          <button class="filter-btn" aria-pressed="false">Backend</button>
+          <button class="filter-btn" aria-pressed="false">Open Source</button>
+        </div>
+
+        <!-- Project cards grid -->
+        <div class="projects-grid">
+
+          <!-- ── Card 1: Featured — Task Manager ────────────────────── -->
+          <article class="project-card project-card--featured" aria-labelledby="proj1-title">
+            <div class="project-card__image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 240px;">
+              <span role="img" aria-label="Task manager app" style="font-size:4rem;">📋</span>
+            </div>
+            <div class="project-card__body">
+              <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.5rem;">
+                <h3 class="project-card__title" id="proj1-title" style="margin:0;">
+                  Task Manager Pro
+                </h3>
+                <span class="status-badge status-badge--live">
+                  <span class="status-dot" aria-hidden="true"></span>
+                  Live
+                </span>
+                <span class="stars" aria-label="142 GitHub stars">⭐ 142</span>
+              </div>
+              <p class="project-card__description">
+                A full-stack task management application with real-time updates
+                via WebSockets, drag-and-drop reordering (HTML5 Drag API), user
+                authentication with JWTs, team workspaces, and data visualization
+                dashboards. Handles 500+ concurrent users.
+              </p>
+              <ul class="project-card__tech" role="list" aria-label="Technologies used">
+                <li class="tech-badge">React 18</li>
+                <li class="tech-badge">Node.js</li>
+                <li class="tech-badge">Express</li>
+                <li class="tech-badge">MongoDB</li>
+                <li class="tech-badge">Socket.io</li>
+                <li class="tech-badge">JWT</li>
+              </ul>
+            </div>
+            <footer class="project-card__footer">
+              <a href="#" class="project-card__link" aria-label="View Task Manager Pro live demo">
+                Live Demo ↗
+              </a>
+              <a href="#" class="project-card__link" aria-label="Task Manager Pro source code on GitHub">
+                GitHub ↗
+              </a>
+              <a href="#" class="project-card__link">
+                Case Study →
+              </a>
+            </footer>
+          </article>
+
+          <!-- ── Card 2: E-Commerce ─────────────────────────────────── -->
+          <article class="project-card" aria-labelledby="proj2-title">
+            <div class="project-card__image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <span role="img" aria-label="E-commerce store" style="font-size:3rem;">🛒</span>
+            </div>
+            <div class="project-card__body">
+              <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.5rem;">
+                <h3 class="project-card__title" id="proj2-title" style="margin:0;">ShopFlow</h3>
+                <span class="status-badge status-badge--live">
+                  <span class="status-dot" aria-hidden="true"></span>
+                  Live
+                </span>
+              </div>
+              <p class="project-card__description">
+                A modern e-commerce store with server-side rendering for SEO,
+                Stripe payment integration, inventory management, and an admin
+                dashboard with sales analytics.
+              </p>
+              <ul class="project-card__tech" role="list" aria-label="Technologies used">
+                <li class="tech-badge">Next.js</li>
+                <li class="tech-badge">Stripe</li>
+                <li class="tech-badge">PostgreSQL</li>
+                <li class="tech-badge">Prisma</li>
+              </ul>
+            </div>
+            <footer class="project-card__footer">
+              <a href="#" class="project-card__link">Live Demo ↗</a>
+              <a href="#" class="project-card__link">GitHub ↗</a>
+            </footer>
+          </article>
+
+          <!-- ── Card 3: Weather Dashboard ──────────────────────────── -->
+          <article class="project-card" aria-labelledby="proj3-title">
+            <div class="project-card__image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <span role="img" aria-label="Weather dashboard" style="font-size:3rem;">🌤️</span>
+              <span class="opensource-ribbon" aria-label="Open source project">Open Source</span>
+            </div>
+            <div class="project-card__body">
+              <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.5rem;">
+                <h3 class="project-card__title" id="proj3-title" style="margin:0;">WeatherViz</h3>
+                <span class="status-badge status-badge--live">
+                  <span class="status-dot" aria-hidden="true"></span>
+                  Live
+                </span>
+                <span class="stars" aria-label="89 GitHub stars">⭐ 89</span>
+              </div>
+              <p class="project-card__description">
+                Interactive weather dashboard using OpenWeatherMap API with
+                Chart.js visualizations, 7-day forecasts, location search,
+                and PWA support for offline use.
+              </p>
+              <ul class="project-card__tech" role="list" aria-label="Technologies used">
+                <li class="tech-badge">Vanilla JS</li>
+                <li class="tech-badge">Chart.js</li>
+                <li class="tech-badge">OpenWeather API</li>
+                <li class="tech-badge">PWA</li>
+              </ul>
+            </div>
+            <footer class="project-card__footer">
+              <a href="#" class="project-card__link">Live Demo ↗</a>
+              <a href="#" class="project-card__link">GitHub ↗</a>
+            </footer>
+          </article>
+
+          <!-- ── Card 4: Portfolio V1 ───────────────────────────────── -->
+          <article class="project-card" aria-labelledby="proj4-title">
+            <div class="project-card__image" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">
+              <span role="img" aria-label="Portfolio website" style="font-size:3rem;">💼</span>
+            </div>
+            <div class="project-card__body">
+              <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.5rem;">
+                <h3 class="project-card__title" id="proj4-title" style="margin:0;">Portfolio V1</h3>
+                <span class="status-badge status-badge--archived">
+                  <span class="status-dot" aria-hidden="true"></span>
+                  Archived
+                </span>
+              </div>
+              <p class="project-card__description">
+                My first portfolio website — built with pure HTML, CSS, and
+                vanilla JavaScript. A great learning experience in semantic
+                HTML and CSS animations.
+              </p>
+              <ul class="project-card__tech" role="list" aria-label="Technologies used">
+                <li class="tech-badge">HTML5</li>
+                <li class="tech-badge">CSS3</li>
+                <li class="tech-badge">JavaScript</li>
+              </ul>
+            </div>
+            <footer class="project-card__footer">
+              <a href="#" class="project-card__link">GitHub ↗</a>
+            </footer>
+          </article>
+
+          <!-- ── Card 5: CSS Library ────────────────────────────────── -->
+          <article class="project-card" aria-labelledby="proj5-title">
+            <div class="project-card__image" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+              <span role="img" aria-label="CSS library" style="font-size:3rem;">🎨</span>
+              <span class="opensource-ribbon">Open Source</span>
+            </div>
+            <div class="project-card__body">
+              <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.5rem;">
+                <h3 class="project-card__title" id="proj5-title" style="margin:0;">PicoCSS Theme</h3>
+                <span class="status-badge status-badge--wip">
+                  <span class="status-dot" aria-hidden="true"></span>
+                  WIP
+                </span>
+                <span class="stars" aria-label="34 GitHub stars">⭐ 34</span>
+              </div>
+              <p class="project-card__description">
+                A custom dark theme for the Pico.css framework with extended
+                component library, color system, and documentation site.
+              </p>
+              <ul class="project-card__tech" role="list" aria-label="Technologies used">
+                <li class="tech-badge">CSS Custom Props</li>
+                <li class="tech-badge">Sass</li>
+                <li class="tech-badge">Pico.css</li>
+              </ul>
+            </div>
+            <footer class="project-card__footer">
+              <a href="#" class="project-card__link">GitHub ↗</a>
+            </footer>
+          </article>
+
+          <!-- ── Card 6: CLI Tool ───────────────────────────────────── -->
+          <article class="project-card" aria-labelledby="proj6-title">
+            <div class="project-card__image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+              <span role="img" aria-label="CLI tool" style="font-size:3rem;">⚡</span>
+              <span class="opensource-ribbon">Open Source</span>
+            </div>
+            <div class="project-card__body">
+              <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.5rem;">
+                <h3 class="project-card__title" id="proj6-title" style="margin:0;">DevSpark CLI</h3>
+                <span class="status-badge status-badge--live">
+                  <span class="status-dot" aria-hidden="true"></span>
+                  Live
+                </span>
+                <span class="stars" aria-label="217 GitHub stars">⭐ 217</span>
+              </div>
+              <p class="project-card__description">
+                A Node.js CLI tool that scaffolds web projects with opinionated
+                folder structures, ESLint config, Git hooks, and optional
+                framework starters. Published on npm.
+              </p>
+              <ul class="project-card__tech" role="list" aria-label="Technologies used">
+                <li class="tech-badge">Node.js</li>
+                <li class="tech-badge">Commander.js</li>
+                <li class="tech-badge">npm</li>
+                <li class="tech-badge">Inquirer</li>
+              </ul>
+            </div>
+            <footer class="project-card__footer">
+              <a href="#" class="project-card__link">npm ↗</a>
+              <a href="#" class="project-card__link">GitHub ↗</a>
+            </footer>
+          </article>
+
+        </div>
+        <!-- /projects-grid -->
+
+        <!-- CTA at bottom -->
+        <div style="text-align:center; margin-top:4rem;">
+          <p class="text-muted" style="margin-bottom:1.5rem;">
+            Want to see more? Check out my GitHub profile for all repositories.
+          </p>
+          <a href="https://github.com" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+            View GitHub Profile ↗
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       SITE FOOTER
+       ════════════════════════════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+
+        <div>
+          <a href="index.html" class="footer-logo">AlexJ</a>
+          <p class="footer-tagline">Building the web, one line at a time.</p>
+        </div>
+
+        <nav aria-label="Footer navigation">
+          <ul class="footer-nav" role="list">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+
+        <ul class="footer-social" role="list" aria-label="Social media links">
+          <li>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+          </li>
+        </ul>
+
+        <hr class="footer-divider" />
+        <p class="footer-copyright">
+          &copy; <time datetime="2026">2026</time>
+          <a href="index.html">Alex Johnson</a>. Built with ❤️ and vanilla web tech.
+        </p>
+
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ── Dark Mode Toggle ─────────────────────────────────────────────────── */
+    const toggle = document.getElementById('theme-toggle');
+    const html   = document.documentElement;
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    toggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    toggle.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      const next    = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      toggle.textContent = next === 'dark' ? '☀️' : '🌙';
+    });
+
+    /* ── Mobile Nav ───────────────────────────────────────────────────────── */
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks  = document.getElementById('nav-links');
+
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('nav-open');
+      navToggle.setAttribute('aria-expanded', isOpen);
+      navToggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+    });
+
+    navLinks.querySelectorAll('.nav__link').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('nav-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
+        navLinks.classList.remove('nav-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    /* ── Header scroll shadow ─────────────────────────────────────────────── */
+    const header = document.getElementById('site-header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    /* ── Filter button toggle (UI only — no actual filtering yet) ─────────── */
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<!-- STEP 2: Advanced CSS3 & Responsive Architecture - Full styling with Grid, Flexbox, CSS Variables, Dark Mode -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Alex Johnson — Full-Stack Web Developer. Building beautiful, accessible, and performant web experiences." />
+  <meta name="author" content="Alex Johnson" />
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:title" content="Alex Johnson | Web Developer" />
+  <meta property="og:description" content="Full-Stack Web Developer specializing in modern JavaScript, React, and Node.js." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://alexjohnson.dev" />
+
+  <title>Alex Johnson | Web Developer</title>
+
+  <!-- Step 2: Linking our main stylesheet (relative path from index.html) -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Preconnect to Google Fonts for faster loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Inter (body) and Poppins (headings) — loaded in style.css via @import -->
+  <!-- Also link here as a fallback / for browsers that handle it better -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Skip Navigation Link — Screen reader & keyboard user accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       SITE HEADER & NAVIGATION
+       Fixed at top; uses backdrop-filter for frosted glass effect.
+       ════════════════════════════════════════════════════════════════════════ -->
+  <header class="site-header" id="site-header">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+
+      <!-- Logo / Brand -->
+      <a href="index.html" class="nav__logo" aria-label="Alex Johnson — Home">
+        Alex<span style="opacity:0.7">J</span>
+      </a>
+
+      <!-- Mobile hamburger button (shown on < 768px via CSS) -->
+      <button
+        class="nav__hamburger"
+        id="nav-toggle"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+
+      <!-- Navigation Links -->
+      <ul class="nav__links" id="nav-links" role="list">
+        <li>
+          <!-- aria-current="page" marks the active link for screen readers + CSS -->
+          <a href="index.html" class="nav__link" aria-current="page">Home</a>
+        </li>
+        <li>
+          <a href="about.html" class="nav__link">About</a>
+        </li>
+        <li>
+          <a href="projects.html" class="nav__link">Projects</a>
+        </li>
+        <li>
+          <a href="contact.html" class="nav__link">Contact</a>
+        </li>
+      </ul>
+
+      <!-- Nav Controls (theme toggle) -->
+      <div class="nav__controls">
+        <!-- Dark Mode Toggle — emoji changes via JS -->
+        <button
+          class="theme-toggle"
+          id="theme-toggle"
+          aria-label="Toggle dark mode"
+          title="Toggle dark mode"
+        >🌙</button>
+      </div>
+
+    </nav>
+  </header>
+  <!-- /site-header -->
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ════════════════════════════════════════════════════════════════════════ -->
+  <main class="main" id="main-content">
+
+    <!-- ── HERO SECTION ──────────────────────────────────────────────────── -->
+    <!--
+      CSS Grid layout: two columns on desktop (text | avatar)
+      Collapses to single column on mobile.
+    -->
+    <section class="hero section" aria-labelledby="hero-heading">
+      <div class="container">
+        <div style="display:grid; grid-template-columns:1fr; gap:3rem; align-items:center;">
+
+          <!-- Hero Text Content -->
+          <div class="hero-content">
+
+            <!-- Badge / eyebrow text -->
+            <div class="hero-badge">
+              <span>👋</span>
+              <span>Welcome to my portfolio</span>
+            </div>
+
+            <!-- Main heading — gradient text effect via CSS -->
+            <h1 class="hero-title" id="hero-heading">
+              Hi, I'm
+              <span class="gradient-text">Alex Johnson</span><br />
+              Web Developer
+            </h1>
+
+            <!-- Subtitle / description -->
+            <p class="hero-subtitle">
+              I craft beautiful, fast, and accessible web experiences using
+              modern HTML, CSS, and JavaScript. Currently studying Computer
+              Science and building cool things for the web.
+            </p>
+
+            <!-- Call-to-action buttons -->
+            <div class="hero-actions">
+              <a href="projects.html" class="btn btn-primary">
+                View My Work
+                <span aria-hidden="true">→</span>
+              </a>
+              <a href="about.html" class="btn btn-secondary">
+                About Me
+              </a>
+              <a href="contact.html" class="btn btn-ghost">
+                Get in Touch
+              </a>
+            </div>
+
+          </div>
+          <!-- /hero-content -->
+
+          <!-- Hero Avatar — decorative, hidden from screen readers -->
+          <div class="hero-avatar-wrapper">
+            <div class="hero-avatar" aria-hidden="true">AJ</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+    <!-- /hero -->
+
+    <!-- ── SKILLS SECTION ─────────────────────────────────────────────────── -->
+    <!--
+      Flexbox for pill tags; CSS Grid for category columns.
+    -->
+    <section class="skills section" id="skills" aria-labelledby="skills-heading">
+      <div class="container">
+
+        <header class="section-header">
+          <h2 class="section-title" id="skills-heading">Skills &amp; Technologies</h2>
+          <p class="section-subtitle">
+            The tools and technologies I use to bring ideas to life.
+          </p>
+        </header>
+
+        <!-- Grid of skill categories -->
+        <div class="skills-grid">
+
+          <!-- Category 1: Frontend -->
+          <div class="skill-category">
+            <h3 class="skill-category-title">
+              <span>🎨</span> Frontend
+            </h3>
+            <ul class="skill-tags" role="list" aria-label="Frontend skills">
+              <li class="skill-tag skill-tag--indigo">HTML5</li>
+              <li class="skill-tag skill-tag--indigo">CSS3</li>
+              <li class="skill-tag skill-tag--indigo">JavaScript ES6+</li>
+              <li class="skill-tag skill-tag--indigo">React</li>
+              <li class="skill-tag skill-tag--indigo">TypeScript</li>
+              <li class="skill-tag skill-tag--indigo">Tailwind CSS</li>
+            </ul>
+          </div>
+
+          <!-- Category 2: Backend -->
+          <div class="skill-category">
+            <h3 class="skill-category-title">
+              <span>⚙️</span> Backend
+            </h3>
+            <ul class="skill-tags" role="list" aria-label="Backend skills">
+              <li class="skill-tag skill-tag--cyan">Node.js</li>
+              <li class="skill-tag skill-tag--cyan">Express.js</li>
+              <li class="skill-tag skill-tag--cyan">Python</li>
+              <li class="skill-tag skill-tag--cyan">REST APIs</li>
+              <li class="skill-tag skill-tag--cyan">GraphQL</li>
+            </ul>
+          </div>
+
+          <!-- Category 3: Databases -->
+          <div class="skill-category">
+            <h3 class="skill-category-title">
+              <span>🗄️</span> Databases
+            </h3>
+            <ul class="skill-tags" role="list" aria-label="Database skills">
+              <li class="skill-tag skill-tag--emerald">MongoDB</li>
+              <li class="skill-tag skill-tag--emerald">PostgreSQL</li>
+              <li class="skill-tag skill-tag--emerald">MySQL</li>
+              <li class="skill-tag skill-tag--emerald">Redis</li>
+              <li class="skill-tag skill-tag--emerald">Prisma</li>
+            </ul>
+          </div>
+
+          <!-- Category 4: Tools -->
+          <div class="skill-category">
+            <h3 class="skill-category-title">
+              <span>🛠️</span> Tools
+            </h3>
+            <ul class="skill-tags" role="list" aria-label="Development tools">
+              <li class="skill-tag skill-tag--amber">Git &amp; GitHub</li>
+              <li class="skill-tag skill-tag--amber">VS Code</li>
+              <li class="skill-tag skill-tag--amber">Docker</li>
+              <li class="skill-tag skill-tag--amber">Figma</li>
+              <li class="skill-tag skill-tag--amber">Webpack</li>
+            </ul>
+          </div>
+
+        </div>
+        <!-- /skills-grid -->
+
+      </div>
+    </section>
+    <!-- /skills -->
+
+    <!-- ── FEATURED PROJECTS TEASER ───────────────────────────────────────── -->
+    <section class="projects section" id="featured-projects" aria-labelledby="featured-heading">
+      <div class="container">
+
+        <header class="section-header">
+          <h2 class="section-title" id="featured-heading">Featured Projects</h2>
+          <p class="section-subtitle">
+            A selection of work I'm proud of. Each project is an opportunity
+            to learn something new.
+          </p>
+        </header>
+
+        <!-- Auto-fit grid — 1 column mobile, 2-3 on desktop -->
+        <div class="projects-grid">
+
+          <!-- Project Card 1 -->
+          <article class="project-card project-card--featured" aria-labelledby="proj1-title">
+            <div class="project-card__image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <span role="img" aria-label="Web application screenshot">🌐</span>
+            </div>
+            <div class="project-card__body">
+              <h3 class="project-card__title" id="proj1-title">Task Manager App</h3>
+              <p class="project-card__description">
+                A full-stack task management application with real-time updates,
+                user authentication, drag-and-drop reordering, and team
+                collaboration features.
+              </p>
+              <ul class="project-card__tech" role="list" aria-label="Technologies used">
+                <li class="tech-badge">React</li>
+                <li class="tech-badge">Node.js</li>
+                <li class="tech-badge">MongoDB</li>
+                <li class="tech-badge">Socket.io</li>
+              </ul>
+            </div>
+            <footer class="project-card__footer">
+              <a href="projects.html" class="project-card__link">
+                View Details <span aria-hidden="true">→</span>
+              </a>
+              <a href="#" class="project-card__link" aria-label="View Task Manager App live demo">
+                Live Demo <span aria-hidden="true">↗</span>
+              </a>
+            </footer>
+          </article>
+
+          <!-- Project Card 2 -->
+          <article class="project-card" aria-labelledby="proj2-title">
+            <div class="project-card__image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <span role="img" aria-label="E-commerce app">🛒</span>
+            </div>
+            <div class="project-card__body">
+              <h3 class="project-card__title" id="proj2-title">E-Commerce Store</h3>
+              <p class="project-card__description">
+                A modern online store with product filtering, cart management,
+                Stripe payment integration, and an admin dashboard.
+              </p>
+              <ul class="project-card__tech" role="list" aria-label="Technologies used">
+                <li class="tech-badge">Next.js</li>
+                <li class="tech-badge">Stripe</li>
+                <li class="tech-badge">PostgreSQL</li>
+              </ul>
+            </div>
+            <footer class="project-card__footer">
+              <a href="projects.html" class="project-card__link">
+                View Details <span aria-hidden="true">→</span>
+              </a>
+            </footer>
+          </article>
+
+          <!-- Project Card 3 -->
+          <article class="project-card" aria-labelledby="proj3-title">
+            <div class="project-card__image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <span role="img" aria-label="Weather app">🌤️</span>
+            </div>
+            <div class="project-card__body">
+              <h3 class="project-card__title" id="proj3-title">Weather Dashboard</h3>
+              <p class="project-card__description">
+                A weather dashboard that displays real-time forecasts,
+                interactive maps, and historical data visualizations using
+                Chart.js.
+              </p>
+              <ul class="project-card__tech" role="list" aria-label="Technologies used">
+                <li class="tech-badge">JavaScript</li>
+                <li class="tech-badge">Chart.js</li>
+                <li class="tech-badge">OpenWeather API</li>
+              </ul>
+            </div>
+            <footer class="project-card__footer">
+              <a href="projects.html" class="project-card__link">
+                View Details <span aria-hidden="true">→</span>
+              </a>
+            </footer>
+          </article>
+
+        </div>
+        <!-- /projects-grid -->
+
+        <!-- View all projects CTA -->
+        <div style="text-align:center; margin-top:3rem;">
+          <a href="projects.html" class="btn btn-secondary">
+            View All Projects <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+    <!-- /featured-projects -->
+
+  </main>
+  <!-- /main -->
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       SITE FOOTER
+       Always dark background regardless of theme.
+       ════════════════════════════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+
+        <!-- Footer brand -->
+        <div>
+          <a href="index.html" class="footer-logo">AlexJ</a>
+          <p class="footer-tagline">Building the web, one line at a time.</p>
+        </div>
+
+        <!-- Footer navigation -->
+        <nav aria-label="Footer navigation">
+          <ul class="footer-nav" role="list">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+
+        <!-- Social links -->
+        <ul class="footer-social" role="list" aria-label="Social media links">
+          <li>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+               aria-label="GitHub profile (opens in new tab)" title="GitHub">
+              <!-- GitHub SVG icon -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
+               aria-label="LinkedIn profile (opens in new tab)" title="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
+               aria-label="Twitter / X profile (opens in new tab)" title="Twitter / X">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+          </li>
+        </ul>
+
+        <hr class="footer-divider" />
+
+        <p class="footer-copyright">
+          &copy; <time datetime="2026">2026</time>
+          <a href="index.html">Alex Johnson</a>. Built with ❤️ and vanilla web tech.
+        </p>
+
+      </div>
+    </div>
+  </footer>
+  <!-- /site-footer -->
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       JAVASCRIPT — Inline scripts for theme & nav (no build step required)
+       In a production app these would live in js/main.js.
+       ════════════════════════════════════════════════════════════════════════ -->
+  <script>
+    /* ── Dark Mode Toggle ─────────────────────────────────────────────────── */
+    const toggle = document.getElementById('theme-toggle');
+    const html   = document.documentElement;
+
+    // Load saved theme from localStorage (or default to 'light')
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    toggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    toggle.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      const next    = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      toggle.textContent = next === 'dark' ? '☀️' : '🌙';
+    });
+
+    /* ── Mobile Nav Hamburger ─────────────────────────────────────────────── */
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks  = document.getElementById('nav-links');
+
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('nav-open');
+      navToggle.setAttribute('aria-expanded', isOpen);
+      navToggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+    });
+
+    // Close mobile nav when a link is clicked
+    navLinks.querySelectorAll('.nav__link').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('nav-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Close mobile nav when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
+        navLinks.classList.remove('nav-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    /* ── Header scroll shadow ─────────────────────────────────────────────── */
+    const header = document.getElementById('site-header');
+    const onScroll = () => {
+      header.classList.toggle('scrolled', window.scrollY > 10);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // run once on load
+  </script>
+
+</body>
+</html>

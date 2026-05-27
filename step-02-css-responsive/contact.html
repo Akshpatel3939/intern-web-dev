@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<!-- STEP 2: Advanced CSS3 & Responsive Architecture - Full styling with Grid, Flexbox, CSS Variables, Dark Mode -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact Alex Johnson — Let's collaborate on your next web project." />
+  <meta name="author" content="Alex Johnson" />
+
+  <title>Contact | Alex Johnson</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Page-specific styles for Contact page ──────────────────────────── */
+
+    /* Availability badge */
+    .availability-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      margin-bottom: 2rem;
+    }
+
+    [data-theme="dark"] .availability-badge {
+      background: #064e3b;
+      color: #6ee7b7;
+      border-color: #065f46;
+    }
+
+    .availability-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: availabilityPulse 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes availabilityPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.3); opacity: 0.7; }
+    }
+
+    /* Character counter */
+    .char-counter {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-top: 0.25rem;
+    }
+
+    .char-counter.warning { color: var(--color-warning); }
+    .char-counter.error   { color: var(--color-danger);  }
+
+    /* Form success / error messages */
+    .form-message {
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .form-message.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+      display: flex;
+    }
+
+    .form-message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+      display: flex;
+    }
+
+    [data-theme="dark"] .form-message.success { background: #064e3b; color: #6ee7b7; }
+    [data-theme="dark"] .form-message.error   { background: #4c0519; color: #fda4af; }
+
+    /* FAQ / accordion on contact page */
+    .faq-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .faq-item {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-text);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .faq-question:hover { color: var(--color-primary); }
+
+    .faq-icon {
+      font-size: 1.25rem;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+    .faq-answer {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.625;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      padding: 0 1.25rem;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 200px;
+      padding: 0 1.25rem 1rem;
+    }
+
+    /* "Response time" indicator */
+    .response-time {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    .response-time svg { flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       SITE HEADER
+       ════════════════════════════════════════════════════════════════════════ -->
+  <header class="site-header" id="site-header">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+
+      <a href="index.html" class="nav__logo" aria-label="Alex Johnson — Home">
+        Alex<span style="opacity:0.7">J</span>
+      </a>
+
+      <button
+        class="nav__hamburger"
+        id="nav-toggle"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+
+      <ul class="nav__links" id="nav-links" role="list">
+        <li><a href="index.html" class="nav__link">Home</a></li>
+        <li><a href="about.html" class="nav__link">About</a></li>
+        <li><a href="projects.html" class="nav__link">Projects</a></li>
+        <li><a href="contact.html" class="nav__link" aria-current="page">Contact</a></li>
+      </ul>
+
+      <div class="nav__controls">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+      </div>
+
+    </nav>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ════════════════════════════════════════════════════════════════════════ -->
+  <main class="main" id="main-content">
+
+    <!-- Page Banner -->
+    <section
+      class="section"
+      style="
+        background: linear-gradient(135deg, rgba(79,70,229,0.08) 0%, rgba(6,182,212,0.06) 100%),
+                    var(--color-bg);
+        padding-top: calc(var(--header-height) + 4rem);
+        padding-bottom: 3rem;
+        text-align: center;
+      "
+      aria-labelledby="page-heading"
+    >
+      <div class="container">
+        <!-- Availability badge — pulsing green dot -->
+        <div style="display:flex; justify-content:center;">
+          <div class="availability-badge" role="status" aria-live="polite">
+            <span class="availability-dot" aria-hidden="true"></span>
+            Available for new projects
+          </div>
+        </div>
+
+        <h1 id="page-heading" class="section-title" style="font-size:clamp(2rem,5vw,3.5rem); margin-top:1rem;">
+          Let's Work Together
+        </h1>
+        <p class="section-subtitle">
+          Have a project in mind? Want to collaborate? Or just want to say hi?
+          My inbox is always open.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── CONTACT LAYOUT: Form + Sidebar ────────────────────────────────── -->
+    <!--
+      CSS Grid: form gets 3fr, sidebar gets 2fr on desktop.
+      Stacks to single column on mobile.
+      Flexbox used inside each column for vertical stacking.
+    -->
+    <section class="section" aria-labelledby="form-heading" id="contact-form-section">
+      <div class="container">
+
+        <div class="contact-layout">
+
+          <!-- ── Contact Form ──────────────────────────────────────────── -->
+          <div class="contact-form-card">
+
+            <h2 id="form-heading" style="font-size:1.5rem; margin-bottom:0.5rem;">
+              Send Me a Message
+            </h2>
+            <p style="font-size:0.875rem; color:var(--color-text-muted); margin-bottom:1.5rem;">
+              Fill out the form below and I'll get back to you within 24 hours.
+            </p>
+
+            <!-- Success message (shown via JS on form submit) -->
+            <div class="form-message success" id="success-message" role="alert" aria-live="polite" aria-hidden="true">
+              <span aria-hidden="true">✅</span>
+              <span>Message sent! I'll be in touch within 24 hours.</span>
+            </div>
+
+            <!-- Contact form
+                 NOTE: In production, this would POST to a backend or service
+                 like Formspree. For now, we prevent default and show a message.
+            -->
+            <form
+              class="contact-form"
+              id="contact-form"
+              action="#"
+              method="POST"
+              novalidate
+              aria-label="Contact form"
+            >
+
+              <!-- Name + Email row (2 columns on sm+) -->
+              <div class="form-row">
+
+                <!-- Name field -->
+                <div class="form-group">
+                  <label for="name" class="form-label">
+                    Full Name
+                    <span class="required" aria-label="required">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="form-input"
+                    placeholder="Alex Johnson"
+                    autocomplete="name"
+                    required
+                    aria-required="true"
+                    aria-describedby="name-hint"
+                    minlength="2"
+                    maxlength="60"
+                  />
+                  <span id="name-hint" class="form-hint">
+                    As you'd like to be addressed.
+                  </span>
+                </div>
+
+                <!-- Email field -->
+                <div class="form-group">
+                  <label for="email" class="form-label">
+                    Email Address
+                    <span class="required" aria-label="required">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-input"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    required
+                    aria-required="true"
+                    aria-describedby="email-hint"
+                  />
+                  <span id="email-hint" class="form-hint">
+                    I'll never share your email. Promise.
+                  </span>
+                </div>
+
+              </div>
+              <!-- /form-row -->
+
+              <!-- Subject field -->
+              <div class="form-group">
+                <label for="subject" class="form-label">
+                  Subject
+                  <span class="required" aria-label="required">*</span>
+                </label>
+                <select
+                  id="subject"
+                  name="subject"
+                  class="form-input form-select"
+                  required
+                  aria-required="true"
+                >
+                  <option value="" disabled selected>Select a topic…</option>
+                  <option value="freelance">💼 Freelance Project</option>
+                  <option value="fulltime">🏢 Full-Time Opportunity</option>
+                  <option value="collaboration">🤝 Open Source Collaboration</option>
+                  <option value="mentorship">🎓 Mentorship / Advice</option>
+                  <option value="just-hi">👋 Just Saying Hi</option>
+                  <option value="other">💬 Other</option>
+                </select>
+              </div>
+
+              <!-- Budget field (for freelance) -->
+              <div class="form-group">
+                <label for="budget" class="form-label">
+                  Budget Range
+                  <span style="color:var(--color-text-muted); font-weight:400;"> (optional)</span>
+                </label>
+                <select id="budget" name="budget" class="form-input form-select">
+                  <option value="" selected>Prefer not to say</option>
+                  <option value="small">Under $1,000</option>
+                  <option value="medium">$1,000 – $5,000</option>
+                  <option value="large">$5,000 – $15,000</option>
+                  <option value="enterprise">$15,000+</option>
+                </select>
+              </div>
+
+              <!-- Message field -->
+              <div class="form-group">
+                <label for="message" class="form-label">
+                  Message
+                  <span class="required" aria-label="required">*</span>
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  class="form-textarea"
+                  rows="6"
+                  placeholder="Tell me about your project, idea, or question. The more detail, the better!"
+                  required
+                  aria-required="true"
+                  aria-describedby="message-counter message-hint"
+                  maxlength="1000"
+                ></textarea>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span id="message-hint" class="form-hint">Minimum 20 characters.</span>
+                  <span id="message-counter" class="char-counter" aria-live="polite" aria-atomic="true">
+                    0 / 1000
+                  </span>
+                </div>
+              </div>
+
+              <!-- Honeypot field (spam protection — hidden from users) -->
+              <div style="display:none;" aria-hidden="true">
+                <label for="website">Website (leave blank)</label>
+                <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <!-- Privacy consent checkbox -->
+              <div class="form-group" style="flex-direction:row; align-items:flex-start; gap:0.75rem;">
+                <input
+                  type="checkbox"
+                  id="privacy"
+                  name="privacy"
+                  required
+                  aria-required="true"
+                  style="width:18px; height:18px; flex-shrink:0; margin-top:2px; accent-color:var(--color-primary); cursor:pointer;"
+                />
+                <label for="privacy" style="font-size:0.875rem; color:var(--color-text-muted); cursor:pointer; max-width:none; font-weight:400;">
+                  I agree that my submitted data will be stored and processed
+                  to respond to my message. I've read and accepted the
+                  <a href="#" style="color:var(--color-primary);">Privacy Policy</a>.
+                </label>
+              </div>
+
+              <!-- Submit button -->
+              <button type="submit" class="btn-submit">
+                Send Message 🚀
+              </button>
+
+              <!-- Response time note -->
+              <div class="response-time" aria-label="Typical response time">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Typical response time: within 24 hours on weekdays.
+              </div>
+
+            </form>
+
+          </div>
+          <!-- /contact-form-card -->
+
+          <!-- ── Sidebar: Contact Info + FAQ ───────────────────────────── -->
+          <div class="contact-info" aria-label="Contact information">
+
+            <!-- Contact methods -->
+            <div>
+              <h2 style="font-size:1.25rem; margin-bottom:1.25rem;">Other Ways to Reach Me</h2>
+
+              <div style="display:flex; flex-direction:column; gap:0.75rem;">
+
+                <div class="contact-info-item">
+                  <div class="ci-icon" aria-hidden="true">✉️</div>
+                  <div>
+                    <div class="ci-label">Email</div>
+                    <a href="mailto:alex@example.com" class="ci-value">alex@example.com</a>
+                  </div>
+                </div>
+
+                <div class="contact-info-item">
+                  <div class="ci-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="ci-label">GitHub</div>
+                    <a href="https://github.com/alexjohnson" class="ci-value" target="_blank" rel="noopener noreferrer">
+                      @alexjohnson ↗
+                    </a>
+                  </div>
+                </div>
+
+                <div class="contact-info-item">
+                  <div class="ci-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="ci-label">LinkedIn</div>
+                    <a href="https://linkedin.com/in/alexjohnson" class="ci-value" target="_blank" rel="noopener noreferrer">
+                      Alex Johnson ↗
+                    </a>
+                  </div>
+                </div>
+
+                <div class="contact-info-item">
+                  <div class="ci-icon" aria-hidden="true">📍</div>
+                  <div>
+                    <div class="ci-label">Location</div>
+                    <span class="ci-value">San Francisco, CA (UTC-8)</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- FAQ section -->
+            <div>
+              <h2 style="font-size:1.25rem; margin-bottom:1.25rem;">Frequently Asked</h2>
+              <ul class="faq-list" role="list">
+
+                <li class="faq-item">
+                  <button
+                    class="faq-question"
+                    aria-expanded="false"
+                    aria-controls="faq1-answer"
+                  >
+                    Are you available for freelance work?
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                  </button>
+                  <div id="faq1-answer" class="faq-answer" role="region">
+                    Yes! I'm currently accepting freelance projects, especially
+                    full-stack web apps, landing pages, and React frontends.
+                    Let's talk!
+                  </div>
+                </li>
+
+                <li class="faq-item">
+                  <button
+                    class="faq-question"
+                    aria-expanded="false"
+                    aria-controls="faq2-answer"
+                  >
+                    What's your typical project timeline?
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                  </button>
+                  <div id="faq2-answer" class="faq-answer" role="region">
+                    It depends on complexity. A landing page takes 1-2 weeks;
+                    a full-stack app can take 4-12 weeks. I'll give you a
+                    detailed estimate after our discovery call.
+                  </div>
+                </li>
+
+                <li class="faq-item">
+                  <button
+                    class="faq-question"
+                    aria-expanded="false"
+                    aria-controls="faq3-answer"
+                  >
+                    Do you work remotely?
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                  </button>
+                  <div id="faq3-answer" class="faq-answer" role="region">
+                    Absolutely. I'm 100% remote-friendly and have experience
+                    working across different time zones. I use async-first
+                    communication tools like Slack, Notion, and Linear.
+                  </div>
+                </li>
+
+              </ul>
+            </div>
+
+          </div>
+          <!-- /contact-info -->
+
+        </div>
+        <!-- /contact-layout -->
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       SITE FOOTER
+       ════════════════════════════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+
+        <div>
+          <a href="index.html" class="footer-logo">AlexJ</a>
+          <p class="footer-tagline">Building the web, one line at a time.</p>
+        </div>
+
+        <nav aria-label="Footer navigation">
+          <ul class="footer-nav" role="list">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+
+        <ul class="footer-social" role="list" aria-label="Social media links">
+          <li>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+          </li>
+        </ul>
+
+        <hr class="footer-divider" />
+        <p class="footer-copyright">
+          &copy; <time datetime="2026">2026</time>
+          <a href="index.html">Alex Johnson</a>. Built with ❤️ and vanilla web tech.
+        </p>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       JAVASCRIPT
+       ════════════════════════════════════════════════════════════════════════ -->
+  <script>
+    /* ── Dark Mode Toggle ─────────────────────────────────────────────────── */
+    const toggle = document.getElementById('theme-toggle');
+    const html   = document.documentElement;
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    toggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    toggle.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      const next    = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      toggle.textContent = next === 'dark' ? '☀️' : '🌙';
+    });
+
+    /* ── Mobile Nav ───────────────────────────────────────────────────────── */
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks  = document.getElementById('nav-links');
+
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('nav-open');
+      navToggle.setAttribute('aria-expanded', isOpen);
+      navToggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+    });
+
+    navLinks.querySelectorAll('.nav__link').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('nav-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
+        navLinks.classList.remove('nav-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    /* ── Header scroll shadow ─────────────────────────────────────────────── */
+    const header = document.getElementById('site-header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    /* ── Message character counter ────────────────────────────────────────── */
+    const messageArea    = document.getElementById('message');
+    const charCounter    = document.getElementById('message-counter');
+    const MAX_CHARS      = 1000;
+    const WARN_THRESHOLD = 900;
+
+    if (messageArea && charCounter) {
+      messageArea.addEventListener('input', () => {
+        const count = messageArea.value.length;
+        charCounter.textContent = `${count} / ${MAX_CHARS}`;
+        charCounter.className = 'char-counter';
+        if (count >= MAX_CHARS)         charCounter.classList.add('error');
+        else if (count >= WARN_THRESHOLD) charCounter.classList.add('warning');
+      });
+    }
+
+    /* ── Contact form submit (demo — prevent default, show success msg) ───── */
+    const contactForm    = document.getElementById('contact-form');
+    const successMessage = document.getElementById('success-message');
+
+    if (contactForm) {
+      contactForm.addEventListener('submit', (e) => {
+        e.preventDefault(); // Prevent real submission (no backend yet)
+
+        // Basic honeypot check
+        const honeypot = contactForm.querySelector('[name="website"]');
+        if (honeypot && honeypot.value) {
+          return; // Spam bot detected — silently ignore
+        }
+
+        // Show success message
+        if (successMessage) {
+          successMessage.style.display = 'flex';
+          successMessage.removeAttribute('aria-hidden');
+          successMessage.focus();
+          // Scroll to message
+          successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Reset form
+        contactForm.reset();
+        if (charCounter) charCounter.textContent = '0 / 1000';
+
+        // Hide success message after 8 seconds
+        setTimeout(() => {
+          if (successMessage) {
+            successMessage.style.display = 'none';
+            successMessage.setAttribute('aria-hidden', 'true');
+          }
+        }, 8000);
+      });
+    }
+
+    /* ── FAQ Accordion ────────────────────────────────────────────────────── */
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const faqItem = btn.closest('.faq-item');
+        const isOpen  = faqItem.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen);
+
+        // Close other open FAQ items (accordion behavior)
+        document.querySelectorAll('.faq-item.open').forEach(otherItem => {
+          if (otherItem !== faqItem) {
+            otherItem.classList.remove('open');
+            otherItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

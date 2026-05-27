@@ -1,0 +1,1713 @@
+/* =============================================================================
+   STEP 2: Advanced CSS3 & Responsive Architecture
+   Portfolio Stylesheet — Inter + Poppins Fonts, CSS Variables, Dark Mode
+   
+   TABLE OF CONTENTS:
+   01. Google Fonts Import
+   02. CSS Custom Properties (Design Tokens)
+   03. CSS Reset & Base Styles
+   04. Accessibility — Skip Link
+   05. Layout Utilities
+   06. Typography Helpers
+   07. Header & Navigation
+   08. Hamburger Menu (Mobile)
+   09. Hero Section
+   10. Skills Section
+   11. Projects / Cards Grid
+   12. About Page Layout
+   13. Contact Form
+   14. Footer
+   15. Dark Mode Toggle Button
+   16. Animations & Keyframes
+   17. Responsive Media Queries (Mobile-First)
+   ============================================================================= */
+
+
+/* =============================================================================
+   01. GOOGLE FONTS IMPORT
+   Loading Inter (body copy) and Poppins (headings) from Google Fonts CDN.
+   display=swap prevents invisible text during load (FOIT prevention).
+   ============================================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@600;700;800&display=swap');
+
+
+/* =============================================================================
+   02. CSS CUSTOM PROPERTIES (Design Tokens)
+   
+   Why CSS Variables?
+   - Single source of truth for colors, spacing, radii, etc.
+   - Dark mode is achieved by simply overriding these on [data-theme="dark"]
+   - JavaScript can read/write them at runtime
+   - Much easier to maintain than scattered literal values
+   ============================================================================= */
+:root {
+  /* ── Light Mode Color Palette ─────────────────────────────────────────────── */
+  --color-bg:            #f8fafc;          /* Page background — cool near-white    */
+  --color-surface:       #ffffff;          /* Card / component surface             */
+  --color-surface-alt:   #f1f5f9;          /* Alternate surface (zebra rows, etc.) */
+  --color-primary:       #4f46e5;          /* Indigo — primary brand color         */
+  --color-primary-hover: #4338ca;          /* Slightly darker indigo for hover     */
+  --color-primary-light: #ede9fe;          /* Tinted indigo for badges / chips     */
+  --color-secondary:     #06b6d4;          /* Cyan — accent / highlight color      */
+  --color-secondary-hover: #0891b2;        /* Darker cyan for hover states         */
+  --color-success:       #10b981;          /* Green — success states               */
+  --color-warning:       #f59e0b;          /* Amber — warning states               */
+  --color-danger:        #ef4444;          /* Red — error states                   */
+
+  /* ── Text Colors ──────────────────────────────────────────────────────────── */
+  --color-text:          #1e293b;          /* Primary text — near-black slate      */
+  --color-text-muted:    #64748b;          /* Secondary text — medium slate        */
+  --color-text-inverse:  #ffffff;          /* Text on dark / primary backgrounds   */
+
+  /* ── Border & Shadow ─────────────────────────────────────────────────────── */
+  --color-border:        #e2e8f0;          /* Subtle border for cards, inputs      */
+  --color-shadow:        rgba(0,0,0,0.08); /* Card drop shadow base color          */
+  --shadow-sm:           0 1px 3px var(--color-shadow), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:           0 4px 6px var(--color-shadow), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg:           0 10px 15px var(--color-shadow), 0 4px 6px rgba(0,0,0,0.05);
+  --shadow-xl:           0 20px 25px var(--color-shadow), 0 8px 10px rgba(0,0,0,0.04);
+
+  /* ── Typography ──────────────────────────────────────────────────────────── */
+  --font-sans:           'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading:        'Poppins', 'Inter', sans-serif;
+  --font-mono:           'Fira Code', 'Courier New', monospace;
+
+  /* Font sizes using a modular scale (base 16px) */
+  --text-xs:    0.75rem;    /* 12px */
+  --text-sm:    0.875rem;   /* 14px */
+  --text-base:  1rem;       /* 16px */
+  --text-lg:    1.125rem;   /* 18px */
+  --text-xl:    1.25rem;    /* 20px */
+  --text-2xl:   1.5rem;     /* 24px */
+  --text-3xl:   1.875rem;   /* 30px */
+  --text-4xl:   2.25rem;    /* 36px */
+  --text-5xl:   3rem;       /* 48px */
+  --text-6xl:   3.75rem;    /* 60px */
+
+  /* Line heights */
+  --leading-tight:  1.25;
+  --leading-snug:   1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed:1.625;
+
+  /* ── Spacing ─────────────────────────────────────────────────────────────── */
+  --space-1:  0.25rem;   /* 4px  */
+  --space-2:  0.5rem;    /* 8px  */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+  --space-24: 6rem;      /* 96px */
+
+  /* ── Shape & Motion ──────────────────────────────────────────────────────── */
+  --radius-sm:  6px;
+  --radius:     12px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --radius-full:9999px;   /* Pill / circle shapes */
+
+  --transition:      all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Layout ──────────────────────────────────────────────────────────────── */
+  --max-width:      1200px;
+  --header-height:  70px;
+  --nav-padding:    0 var(--space-8);
+}
+
+
+/* =============================================================================
+   DARK MODE — Override color tokens only.
+   Applied via JavaScript toggling data-theme="dark" on <html>.
+   
+   Why [data-theme] instead of @media (prefers-color-scheme)?
+   - Gives users manual control that persists via localStorage.
+   - We still respect the OS preference in the JS as the default.
+   ============================================================================= */
+[data-theme="dark"] {
+  --color-bg:            #0f172a;          /* Deep navy background                  */
+  --color-surface:       #1e293b;          /* Slightly lighter card surface         */
+  --color-surface-alt:   #263147;          /* Alt surface — a touch lighter         */
+  --color-primary:       #818cf8;          /* Lighter indigo — better contrast      */
+  --color-primary-hover: #a5b4fc;          /* Even lighter indigo for hover         */
+  --color-primary-light: #1e1b4b;          /* Deep indigo tint for badges           */
+  --color-secondary:     #22d3ee;          /* Brighter cyan for dark bg             */
+
+  --color-text:          #f1f5f9;          /* Near-white text                       */
+  --color-text-muted:    #94a3b8;          /* Medium-gray muted text                */
+
+  --color-border:        #334155;          /* Darker, barely visible borders        */
+  --color-shadow:        rgba(0,0,0,0.3);  /* Stronger shadows on dark surfaces     */
+  --shadow-sm:           0 1px 3px var(--color-shadow);
+  --shadow-md:           0 4px 6px var(--color-shadow);
+  --shadow-lg:           0 10px 15px var(--color-shadow);
+  --shadow-xl:           0 20px 25px var(--color-shadow);
+}
+
+
+/* =============================================================================
+   03. CSS RESET & BASE STYLES
+   Modern reset based on Josh Comeau's & Andy Bell's approaches.
+   ============================================================================= */
+
+/* Box model — include padding & border in element width/height */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Smooth scrolling (Section 16 of spec) */
+html {
+  scroll-behavior: smooth;
+  /* Offset scroll position to account for fixed header */
+  scroll-padding-top: calc(var(--header-height) + var(--space-4));
+  font-size: 16px; /* Explicit base for rem calculations */
+  -webkit-text-size-adjust: 100%; /* Prevent font scaling on iOS rotation */
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: var(--leading-relaxed);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+
+  /* Smooth background color transitions on theme toggle */
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  /* Prevent horizontal scrollbar from content overflow */
+  overflow-x: hidden;
+}
+
+/* Remove default list styles when lists have role="list" */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/* Better image defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Inherit fonts for form elements (browsers set their own defaults) */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Avoid text overflow in headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+  overflow-wrap: break-word;
+  transition: color 0.3s ease;
+}
+
+p {
+  max-width: 70ch; /* Optimal reading line length ~70 characters */
+  overflow-wrap: break-word;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+/* Remove animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus styles — visible for keyboard users, hidden for mouse */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Selection highlight */
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+
+/* =============================================================================
+   04. ACCESSIBILITY — SKIP LINK
+   Visually hidden until focused by keyboard navigation.
+   Allows keyboard users to skip repetitive navigation.
+   ============================================================================= */
+.skip-link {
+  position: absolute;
+  top: -100%;            /* Off-screen by default */
+  left: var(--space-4);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius);
+  font-weight: 600;
+  text-decoration: none;
+  z-index: 9999;
+  transition: top 0.3s ease;
+  white-space: nowrap;
+}
+
+/* When focused, slide into view at the top of the page */
+.skip-link:focus {
+  top: var(--space-4);
+}
+
+
+/* =============================================================================
+   05. LAYOUT UTILITIES
+   Reusable layout helpers used across all pages.
+   ============================================================================= */
+
+/* Container — centers content and caps max width */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;  /* Auto left/right margin = centered */
+  padding-inline: var(--space-6);
+}
+
+/* Section wrapper — adds vertical breathing room */
+.section {
+  padding-block: var(--space-20);
+}
+
+/* Section header — centered title + subtitle block */
+.section-header {
+  text-align: center;
+  margin-bottom: var(--space-16);
+}
+
+.section-title {
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+  position: relative;
+  display: inline-block;
+}
+
+/* Decorative underline accent on section titles */
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  border-radius: var(--radius-full);
+}
+
+.section-subtitle {
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+  max-width: 55ch;
+  margin-inline: auto;
+  margin-top: var(--space-6);
+}
+
+/* Screen-reader only utility — hides visually but keeps accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+
+/* =============================================================================
+   06. TYPOGRAPHY HELPERS
+   ============================================================================= */
+
+/* Gradient text — primary color to secondary color */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  -webkit-background-clip: text;   /* Chrome/Safari */
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent; /* Fallback removed for modern browsers */
+}
+
+.text-muted  { color: var(--color-text-muted); }
+.text-center { text-align: center; }
+
+
+/* =============================================================================
+   07. HEADER & NAVIGATION
+   
+   Why Flexbox here?
+   - The header is a single-dimension layout (horizontal row).
+   - Flexbox excels at distributing items along one axis.
+   - CSS Grid would be overkill for a simple logo + nav bar.
+   ============================================================================= */
+.site-header {
+  position: fixed;             /* Stays at top on scroll */
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  z-index: 1000;               /* Above all page content */
+
+  /* Frosted glass effect — requires background transparency */
+  background-color: rgba(248, 250, 252, 0.85); /* light mode */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Darker frosted glass in dark mode */
+[data-theme="dark"] .site-header {
+  background-color: rgba(15, 23, 42, 0.85);
+}
+
+/* Shadow appears after scrolling (added via JS) */
+.site-header.scrolled {
+  box-shadow: var(--shadow-md);
+}
+
+/* Inner flex container: logo on left, controls on right */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+/* Logo / Brand */
+.nav__logo {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 800;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.5px;
+  flex-shrink: 0; /* Don't let logo compress */
+}
+
+/* Navigation links list */
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+/* Individual nav link */
+.nav__link {
+  position: relative;
+  display: inline-block;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
+}
+
+.nav__link:hover {
+  color: var(--color-primary);
+}
+
+/* Animated underline — scales from 0 to full width on hover */
+.nav__link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0); /* Start at zero width */
+  width: calc(100% - var(--space-6));
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  border-radius: var(--radius-full);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.nav__link:hover::after,
+.nav__link[aria-current="page"]::after {
+  transform: translateX(-50%) scaleX(1); /* Expand to full width */
+}
+
+/* Active / current page link */
+.nav__link[aria-current="page"] {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* Right side of nav — controls group */
+.nav__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+
+/* =============================================================================
+   08. HAMBURGER MENU (Mobile)
+   Hidden on desktop, shown on mobile via media query.
+   ============================================================================= */
+.nav__hamburger {
+  display: none;               /* Hidden on desktop */
+  flex-direction: column;
+  justify-content: space-around;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  padding: 7px 8px;
+  transition: var(--transition-fast);
+}
+
+.nav__hamburger:hover {
+  border-color: var(--color-primary);
+}
+
+/* The three lines of the hamburger icon */
+.nav__hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-text);
+  border-radius: 2px;
+  transition: var(--transition-fast);
+}
+
+/* Hamburger → X transformation when open */
+.nav__hamburger[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.nav__hamburger[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.nav__hamburger[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+
+/* =============================================================================
+   09. HERO SECTION
+   
+   Why CSS Grid here?
+   - The hero has a TWO-DIMENSIONAL layout: text content on left,
+     avatar/illustration on right.
+   - CSS Grid is designed for 2D layouts (rows AND columns).
+   - Flexbox would struggle with equal-height alignment across two columns.
+   ============================================================================= */
+.hero {
+  /*
+    On mobile: single column (stacked).
+    On desktop: two columns via media query below.
+  */
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: var(--space-12);
+
+  min-height: 100vh;           /* Full viewport height */
+  padding-top: var(--header-height);
+  padding-block: var(--space-20);
+
+  /* Subtle animated gradient background */
+  background: radial-gradient(
+    ellipse at 0% 50%,
+    rgba(79, 70, 229, 0.08) 0%,
+    transparent 60%
+  ),
+  radial-gradient(
+    ellipse at 100% 20%,
+    rgba(6, 182, 212, 0.08) 0%,
+    transparent 60%
+  ),
+  var(--color-bg);
+  transition: background 0.3s ease;
+}
+
+.hero-content {
+  animation: fadeInUp 0.8s ease both;
+}
+
+/* Badge above hero title — e.g. "👋 Welcome!" */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-6);
+  border: 1px solid var(--color-primary);
+  opacity: 0.85;
+}
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(var(--text-3xl), 6vw, var(--text-6xl));
+  /* clamp() = min, preferred (scales with viewport), max */
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: var(--space-6);
+  letter-spacing: -1px;
+}
+
+.hero-subtitle {
+  font-size: clamp(var(--text-base), 2.5vw, var(--text-xl));
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+  max-width: 50ch;
+  margin-bottom: var(--space-10);
+}
+
+/* CTA button group — Flexbox (single row of buttons) */
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+/* ── Button Styles ─────────────────────────────────────────────────────────── */
+
+/* Base button reset + shared styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-8);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid transparent;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Primary CTA — gradient fill */
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: var(--color-text-inverse);
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.35);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
+  color: var(--color-text-inverse);
+}
+
+.btn-primary:active {
+  transform: translateY(-1px);
+}
+
+/* Secondary / outline button */
+.btn-secondary {
+  background: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Ghost / subtle button */
+.btn-ghost {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-ghost:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Hero Avatar — Right column of hero grid */
+.hero-avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.hero-avatar {
+  width: clamp(200px, 30vw, 320px);
+  height: clamp(200px, 30vw, 320px);
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: clamp(var(--text-4xl), 8vw, var(--text-6xl));
+  font-weight: 800;
+  color: white;
+  letter-spacing: -2px;
+  box-shadow: 0 20px 60px rgba(79, 70, 229, 0.4);
+  position: relative;
+
+  /* Subtle pulse animation */
+  animation: avatarPulse 4s ease-in-out infinite;
+}
+
+/* Decorative ring around avatar */
+.hero-avatar::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  border: 3px dashed rgba(79, 70, 229, 0.35);
+  animation: spin 20s linear infinite;
+}
+
+
+/* =============================================================================
+   10. SKILLS SECTION
+   
+   Why Flexbox here?
+   - Skill pills are a one-dimensional list that wraps to multiple lines.
+   - flex-wrap: wrap handles this perfectly.
+   - No need for grid's strict row/column structure.
+   ============================================================================= */
+.skills {
+  background-color: var(--color-surface-alt);
+  transition: background-color 0.3s ease;
+}
+
+.skills-grid {
+  /* Outer grid: category columns on desktop */
+  display: grid;
+  grid-template-columns: 1fr;  /* Single column on mobile */
+  gap: var(--space-10);
+}
+
+.skill-category {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  transition: var(--transition);
+}
+
+.skill-category:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.skill-category-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.skill-category-title span {
+  font-size: var(--text-xl);
+}
+
+/* Pill / tag list — wraps onto multiple lines */
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+/* Individual skill pill */
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  border-radius: var(--radius-full);
+  transition: var(--transition-fast);
+  cursor: default;
+  border: 1px solid transparent;
+}
+
+/* Colour variants for skill pills */
+.skill-tag--indigo {
+  background: #ede9fe;
+  color: #5b21b6;
+  border-color: #c4b5fd;
+}
+.skill-tag--cyan {
+  background: #ecfeff;
+  color: #0e7490;
+  border-color: #a5f3fc;
+}
+.skill-tag--emerald {
+  background: #d1fae5;
+  color: #065f46;
+  border-color: #6ee7b7;
+}
+.skill-tag--amber {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fcd34d;
+}
+.skill-tag--rose {
+  background: #ffe4e6;
+  color: #9f1239;
+  border-color: #fda4af;
+}
+
+/* Dark mode pill adjustments */
+[data-theme="dark"] .skill-tag--indigo { background: #1e1b4b; color: #a5b4fc; border-color: #3730a3; }
+[data-theme="dark"] .skill-tag--cyan   { background: #0c4a6e; color: #7dd3fc; border-color: #075985; }
+[data-theme="dark"] .skill-tag--emerald{ background: #064e3b; color: #6ee7b7; border-color: #065f46; }
+[data-theme="dark"] .skill-tag--amber  { background: #451a03; color: #fcd34d; border-color: #92400e; }
+[data-theme="dark"] .skill-tag--rose   { background: #4c0519; color: #fda4af; border-color: #9f1239; }
+
+.skill-tag:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* =============================================================================
+   11. PROJECT CARDS — CSS GRID
+   
+   Why CSS Grid here?
+   - We want a multi-column GRID of cards.
+   - auto-fit + minmax creates a responsive grid WITHOUT media queries!
+   - Cards naturally flow into columns based on available space.
+   ============================================================================= */
+.projects {
+  background-color: var(--color-bg);
+}
+
+.projects-grid {
+  /* 
+    auto-fit: Create as many columns as will fit.
+    minmax(300px, 1fr): Each column is at least 300px, max 1 fraction.
+    Result: 1 column on mobile, 2-3 on tablet/desktop — automatically!
+  */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-8);
+}
+
+/* Project Card */
+.project-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;  /* Stack image, content, footer vertically */
+}
+
+.project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--color-primary);
+}
+
+/* Colourful project image placeholder / banner */
+.project-card__image {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-4xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card__image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.15));
+}
+
+.project-card__body {
+  padding: var(--space-6);
+  flex: 1;  /* Grow to fill available space — cards same height in a row */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.project-card__title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.project-card__description {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+  flex: 1;
+  max-width: none;  /* Override the 70ch limit in cards */
+}
+
+/* Tech tag badges below description */
+.project-card__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  margin-top: auto;  /* Push tags to bottom of card body */
+}
+
+.tech-badge {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 2px var(--space-2);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  letter-spacing: 0.02em;
+}
+
+[data-theme="dark"] .tech-badge {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+/* Card footer — links */
+.project-card__footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.project-card__link {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--color-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  transition: var(--transition-fast);
+}
+
+.project-card__link:hover {
+  color: var(--color-primary-hover);
+  gap: var(--space-2);
+}
+
+/* Featured project spans full width */
+.project-card--featured {
+  grid-column: 1 / -1; /* span all columns */
+}
+
+
+/* =============================================================================
+   12. ABOUT PAGE LAYOUT
+   
+   Why CSS Grid here?
+   - The about page has a MAIN CONTENT area (article) + SIDEBAR (aside).
+   - This is a classic two-column asymmetric layout.
+   - CSS Grid lets us declare: article takes 2/3, sidebar takes 1/3.
+   - fr units handle the proportional sizing elegantly.
+   ============================================================================= */
+.about-layout {
+  display: grid;
+  grid-template-columns: 1fr;  /* Single column on mobile */
+  gap: var(--space-12);
+  align-items: start;          /* Align tops of both columns */
+}
+
+.about-article {
+  /* Main content — prose area */
+}
+
+.about-article h1 {
+  font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+  margin-bottom: var(--space-6);
+}
+
+.about-article h2 {
+  font-size: var(--text-2xl);
+  margin-top: var(--space-10);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.about-article p + p {
+  margin-top: var(--space-4);
+}
+
+/* Sidebar / Aside */
+.about-aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* Info card in sidebar */
+.info-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.info-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.info-card__title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+  font-family: var(--font-sans);
+}
+
+.info-card__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.info-card__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.info-card__item .icon {
+  font-size: var(--text-base);
+  flex-shrink: 0;
+}
+
+/* Timeline for experience */
+.timeline {
+  list-style: none;
+  position: relative;
+  padding-left: var(--space-6);
+}
+
+/* Vertical line */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: var(--space-8);
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+/* Dot on the timeline */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--space-6) + 2px);
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  border: 2px solid var(--color-bg);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.timeline-date {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-1);
+}
+
+.timeline-title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  margin-bottom: var(--space-1);
+}
+
+.timeline-company {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+
+/* =============================================================================
+   13. CONTACT FORM
+   ============================================================================= */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-16);
+  align-items: start;
+}
+
+/* Form container card */
+.contact-form-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-10);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Form group — label + input pair */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.form-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Required field asterisk */
+.form-label .required {
+  color: var(--color-danger);
+  margin-left: 2px;
+}
+
+/* Shared input / textarea styles */
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-base);
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  transition: var(--transition-fast);
+  appearance: none;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+/* Focus ring — clearer than default browser outline */
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  background: var(--color-surface);
+}
+
+.form-input:hover,
+.form-textarea:hover {
+  border-color: var(--color-text-muted);
+}
+
+/* Textarea specific */
+.form-textarea {
+  resize: vertical;
+  min-height: 140px;
+  line-height: var(--leading-relaxed);
+}
+
+/* Hint text below inputs */
+.form-hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+/* Two-column row for name + email on desktop */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+}
+
+/* Form submit button — full width gradient */
+.btn-submit {
+  width: 100%;
+  padding: var(--space-4);
+  font-size: var(--text-base);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition);
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.35);
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.45);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+/* Contact info sidebar */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.contact-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.contact-info-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateX(4px);
+  border-color: var(--color-primary);
+}
+
+.contact-info-item .ci-icon {
+  font-size: var(--text-2xl);
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-light);
+  border-radius: var(--radius);
+}
+
+.contact-info-item .ci-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-1);
+}
+
+.contact-info-item .ci-value {
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.contact-info-item a.ci-value {
+  text-decoration: none;
+  color: var(--color-primary);
+}
+
+.contact-info-item a.ci-value:hover {
+  text-decoration: underline;
+}
+
+
+/* =============================================================================
+   14. FOOTER
+   ============================================================================= */
+.site-footer {
+  background-color: #0f172a;  /* Always dark, regardless of theme */
+  color: #94a3b8;
+  padding-block: var(--space-16) var(--space-10);
+  margin-top: auto;
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+  text-align: center;
+}
+
+.footer-logo {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  background: linear-gradient(135deg, #818cf8, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+}
+
+.footer-tagline {
+  font-size: var(--text-sm);
+  color: #64748b;
+  margin-top: var(--space-1);
+}
+
+/* Footer navigation links */
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-6);
+  list-style: none;
+}
+
+.footer-nav a {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: #94a3b8;
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.footer-nav a:hover {
+  color: #818cf8;
+}
+
+/* Social links row */
+.footer-social {
+  display: flex;
+  gap: var(--space-4);
+  list-style: none;
+}
+
+.footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #1e293b;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: var(--text-lg);
+  transition: var(--transition-fast);
+  border: 1px solid #334155;
+}
+
+.footer-social a:hover {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+}
+
+.footer-divider {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #1e293b;
+}
+
+.footer-copyright {
+  font-size: var(--text-sm);
+  color: #475569;
+}
+
+.footer-copyright a {
+  color: #818cf8;
+  text-decoration: none;
+}
+
+.footer-copyright a:hover {
+  text-decoration: underline;
+}
+
+
+/* =============================================================================
+   15. DARK MODE TOGGLE BUTTON
+   ============================================================================= */
+.theme-toggle {
+  background: none;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;           /* Circular button */
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-base);
+  transition: var(--transition);
+  color: var(--color-text);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  transform: rotate(20deg) scale(1.1);
+}
+
+.theme-toggle:active {
+  transform: rotate(0deg) scale(0.95);
+}
+
+
+/* =============================================================================
+   16. ANIMATIONS & KEYFRAMES
+   ============================================================================= */
+
+/* Fade + slide up — hero content entrance */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in only — gentle appearance */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Rotation — decorative ring around avatar */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Subtle pulse — avatar glow effect */
+@keyframes avatarPulse {
+  0%, 100% {
+    box-shadow: 0 20px 60px rgba(79, 70, 229, 0.4);
+  }
+  50% {
+    box-shadow: 0 20px 80px rgba(79, 70, 229, 0.6), 0 0 0 20px rgba(79, 70, 229, 0.05);
+  }
+}
+
+/* Staggered animation utility classes */
+.animate-delay-100 { animation-delay: 0.1s; }
+.animate-delay-200 { animation-delay: 0.2s; }
+.animate-delay-300 { animation-delay: 0.3s; }
+.animate-delay-400 { animation-delay: 0.4s; }
+.animate-delay-500 { animation-delay: 0.5s; }
+
+
+/* =============================================================================
+   17. RESPONSIVE MEDIA QUERIES (MOBILE-FIRST)
+   
+   Strategy: Default styles = MOBILE styles.
+   Then we progressively ENHANCE as screen gets wider.
+   This is the correct "Mobile First" approach.
+   ============================================================================= */
+
+/* ── sm: 640px+ (Large phones, small tablets) ─────────────────────────────── */
+@media (min-width: 640px) {
+  /* Two-column form row */
+  .form-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Two columns of skill categories */
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Footer social row */
+  .footer-inner {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+/* ── md: 768px+ (Tablets) ─────────────────────────────────────────────────── */
+@media (min-width: 768px) {
+  /* Hero: two-column grid layout */
+  .hero {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* About: article takes 2fr, sidebar takes 1fr */
+  .about-layout {
+    grid-template-columns: 2fr 1fr;
+  }
+
+  /* Contact: form + sidebar side by side */
+  .contact-layout {
+    grid-template-columns: 3fr 2fr;
+  }
+
+  /* Section title larger */
+  .section-title {
+    font-size: var(--text-4xl);
+  }
+
+  /* Footer inner always row on md+ */
+  .footer-inner {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+/* ── lg: 1024px+ (Desktops) ──────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  /* Skill categories: 3 columns on desktop */
+  .skills-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Hero: content gets more space than avatar */
+  .hero {
+    grid-template-columns: 55fr 45fr;
+    gap: var(--space-16);
+  }
+
+  /* About layout: wider article */
+  .about-layout {
+    grid-template-columns: 3fr 2fr;
+  }
+
+  /* Sticky sidebar on about page */
+  .about-aside {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-6));
+  }
+
+  /* Increase container padding */
+  .container {
+    padding-inline: var(--space-8);
+  }
+}
+
+/* ── xl: 1280px+ (Large Desktops) ────────────────────────────────────────── */
+@media (min-width: 1280px) {
+  /* Four skill category columns */
+  .skills-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Slightly more generous section padding */
+  .section {
+    padding-block: var(--space-24);
+  }
+}
+
+/* ── Mobile nav (< 768px) ────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  /* Show hamburger, hide nav links */
+  .nav__hamburger {
+    display: flex;
+  }
+
+  /* Mobile nav menu — slides down when open */
+  .nav__links {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-4);
+    gap: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--shadow-lg);
+    /* Hidden by default */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition: var(--transition);
+  }
+
+  /* When nav is open (toggled via JS) */
+  .nav__links.nav-open {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+  }
+
+  .nav__link {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius);
+    font-size: var(--text-base);
+    border: 1px solid var(--color-border);
+    text-align: center;
+  }
+
+  .nav__link::after {
+    display: none;
+  }
+
+  .nav__link:hover,
+  .nav__link[aria-current="page"] {
+    background: var(--color-primary-light);
+  }
+
+  /* Hero stacks on mobile */
+  .hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding-top: calc(var(--header-height) + var(--space-10));
+    min-height: auto;
+    padding-bottom: var(--space-16);
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-subtitle {
+    margin-inline: auto;
+  }
+
+  /* Project card full-width featured */
+  .project-card--featured {
+    grid-column: auto;
+  }
+
+  /* Form card padding reduced */
+  .contact-form-card {
+    padding: var(--space-6);
+  }
+}
+
+/* ── Tall screens — add more vertical spacing ──────────────────────────────── */
+@media (min-height: 800px) {
+  .hero {
+    align-content: center;
+  }
+}
+
+/* ── Print styles ─────────────────────────────────────────────────────────── */
+@media print {
+  .site-header,
+  .theme-toggle,
+  .nav__hamburger,
+  .hero-avatar::before,
+  .site-footer {
+    display: none !important;
+  }
+
+  body {
+    color: #000;
+    background: #fff;
+  }
+
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-top: 0;
+  }
+}

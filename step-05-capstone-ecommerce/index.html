@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopCart | Step 5 - Full-Stack Capstone Project</title>
+  <meta name="description" content="A production-ready E-Commerce product catalog with client-side routing, cart management, and optimized performance.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!--
+  ============================================================
+  STEP 5: Full-Stack Capstone — E-Commerce Product Catalog SPA
+  ============================================================
+  Architecture Overview:
+    - index.html  : SPA shell (this file). Static structure only.
+    - js/products.js : Data layer — product catalog & categories
+    - js/router.js   : Navigation layer — hash-based client-side router
+    - js/app.js      : Application layer — state, rendering, events
+    - css/style.css  : Presentation layer — full premium dark theme
+
+  Key Concepts Demonstrated:
+    1. Single Page Application (SPA) — no full page reloads
+    2. Hash-based client-side routing (#/home, #/products, #/cart)
+    3. Persistent cart state via localStorage
+    4. Event delegation for dynamic DOM content
+    5. Modular JavaScript architecture
+    6. Responsive CSS with CSS custom properties
+    7. Accessible markup (ARIA roles, aria-live regions)
+  ============================================================
+  -->
+
+  <!-- ======================================================
+       SITE HEADER — Fixed top navigation bar
+       The cart badge (#cart-badge) updates dynamically via JS.
+  ====================================================== -->
+  <header class="site-header" role="banner">
+    <div class="container">
+      <!-- Logo links to home route -->
+      <a href="#/home" class="logo" aria-label="ShopCart home">🛍️ ShopCart</a>
+
+      <!-- Main navigation — data-route used by router to set active state -->
+      <nav class="main-nav" role="navigation" aria-label="Main navigation">
+        <a href="#/home"     class="nav-link" data-route="home">Home</a>
+        <a href="#/products" class="nav-link" data-route="products">Products</a>
+        <a href="#/cart"     class="nav-link" data-route="cart">
+          Cart
+          <!-- Badge shows total item count; updated by updateCartBadge() in app.js -->
+          <span class="cart-badge" id="cart-badge" aria-label="items in cart">0</span>
+        </a>
+      </nav>
+
+      <!-- Mobile hamburger — toggles .open class on .main-nav via JS -->
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle mobile menu" aria-expanded="false">
+        ☰
+      </button>
+    </div>
+  </header>
+
+  <!-- ======================================================
+       MAIN APP CONTAINER
+       All page views are rendered into this element by app.js.
+       aria-live="polite" announces content changes to screen readers.
+  ====================================================== -->
+  <main id="app" role="main" aria-live="polite">
+    <!-- Router injects page HTML here on every route change -->
+    <!-- Initial content is rendered by Router.init() in app.js -->
+  </main>
+
+  <!-- ======================================================
+       TOAST NOTIFICATION CONTAINER
+       Toast messages are injected here by showToast() in app.js.
+       aria-live="assertive" for immediate screen reader announcements.
+  ====================================================== -->
+  <div class="toast-container" id="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- ======================================================
+       SITE FOOTER — Static footer content
+  ====================================================== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <p>🛍️ ShopCart — Step 5 Capstone Project | Built with vanilla HTML, CSS &amp; JavaScript</p>
+      <p class="footer-sub">Demonstrating client-side routing · State management · Modular architecture · LocalStorage persistence</p>
+    </div>
+  </footer>
+
+  <!-- ======================================================
+       JAVASCRIPT MODULES — Load order matters!
+       1. products.js  → defines PRODUCTS[] and CATEGORIES[]
+       2. router.js    → defines Router object (used by app.js)
+       3. app.js       → uses both above; registers routes & boots app
+  ====================================================== -->
+  <script src="js/products.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

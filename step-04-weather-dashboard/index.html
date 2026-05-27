@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Real-time weather dashboard powered by the OpenWeatherMap API. Search any city to get live temperature, humidity, wind speed, and more."
+    />
+    <title>Weather Dashboard | Step 4 - Async JS &amp; RESTful APIs</title>
+
+    <!-- Google Fonts: Inter for body text, Poppins for headings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Step 4 Stylesheet -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    STEP 4: Asynchronous JavaScript & RESTful APIs
+    ───────────────────────────────────────────────────────────────
+    Key concepts demonstrated in this project:
+      • Fetch API          — browser-native HTTP requests
+      • async / await      — clean, readable asynchronous code
+      • Promises           — the foundation of async/await
+      • Error Handling     — try / catch / finally blocks
+      • REST API           — OpenWeatherMap data/2.5/weather endpoint
+      • JSON parsing       — response.json() & nested property access
+      • localStorage       — persisting recent searches in the browser
+      • Loading states     — giving users visual feedback during fetches
+      • Dynamic DOM        — rendering data returned from the API
+    ═══════════════════════════════════════════════════════════════
+    -->
+  </head>
+
+  <body>
+    <!-- ── Root application wrapper ──────────────────────────── -->
+    <div class="app">
+
+      <!-- ── App Header ─────────────────────────────────────── -->
+      <header class="app-header">
+        <h1>🌤️ Weather Dashboard</h1>
+        <p>Real-time weather powered by OpenWeatherMap API</p>
+      </header>
+
+      <!-- ── Main Content ───────────────────────────────────── -->
+      <main>
+
+        <!-- ── Search Section ─────────────────────────────── -->
+        <section class="search-section" aria-label="City search">
+          <form class="search-form" id="search-form">
+            <input
+              type="text"
+              id="city-input"
+              class="search-input"
+              placeholder="Enter city name (e.g., London, New York)..."
+              aria-label="City name"
+              autocomplete="off"
+            />
+            <button type="submit" class="search-btn" id="search-btn">
+              <!-- Text label shown when not loading -->
+              <span id="btn-text">Search</span>
+              <!-- Spinner shown during API fetch; hidden attribute hides it initially -->
+              <span
+                class="spinner"
+                id="spinner"
+                hidden
+                aria-hidden="true"
+              ></span>
+            </button>
+          </form>
+
+          <!--
+            Recent Searches — pills rendered dynamically by JS.
+            Clicking a pill re-runs a search for that city.
+          -->
+          <div
+            class="recent-searches"
+            id="recent-searches"
+            aria-label="Recent searches"
+          ></div>
+        </section>
+
+        <!--
+          Error Card — shown when the API returns an error or the
+          network is unavailable. Uses role="alert" so screen
+          readers announce it immediately.
+        -->
+        <div
+          class="error-card"
+          id="error-card"
+          role="alert"
+          aria-live="polite"
+          hidden
+        ></div>
+
+        <!-- ── Weather Display ────────────────────────────── -->
+        <!--
+          The entire weather section starts hidden. JS removes the
+          'hidden' attribute once data has been fetched successfully.
+        -->
+        <section
+          class="weather-section"
+          id="weather-section"
+          aria-label="Weather information"
+          hidden
+        >
+          <!-- Main Weather Card: city name, temperature, icon -->
+          <div class="weather-card main-card">
+            <div class="city-info">
+              <h2 id="city-name">City Name</h2>
+              <p id="country-date">Country • Date</p>
+            </div>
+
+            <div class="temp-display">
+              <!-- Icon URL is built from the API response's icon code -->
+              <img id="weather-icon" src="" alt="" class="weather-icon" />
+              <div>
+                <span id="temperature" class="temperature">--°C</span>
+                <p id="weather-desc" class="weather-desc">Description</p>
+              </div>
+            </div>
+
+            <p id="feels-like" class="feels-like">Feels like --°C</p>
+          </div>
+
+          <!-- Stats Grid: four detail cards -->
+          <div class="stats-grid">
+
+            <div class="stat-card" id="stat-humidity">
+              <div class="stat-icon" aria-hidden="true">💧</div>
+              <div class="stat-value" id="humidity">--%</div>
+              <div class="stat-label">Humidity</div>
+            </div>
+
+            <div class="stat-card" id="stat-wind">
+              <div class="stat-icon" aria-hidden="true">💨</div>
+              <div class="stat-value" id="wind-speed">-- km/h</div>
+              <div class="stat-label">Wind Speed</div>
+            </div>
+
+            <div class="stat-card" id="stat-pressure">
+              <div class="stat-icon" aria-hidden="true">🌡️</div>
+              <div class="stat-value" id="pressure">-- hPa</div>
+              <div class="stat-label">Pressure</div>
+            </div>
+
+            <div class="stat-card" id="stat-visibility">
+              <div class="stat-icon" aria-hidden="true">👁️</div>
+              <div class="stat-value" id="visibility">-- km</div>
+              <div class="stat-label">Visibility</div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ── Welcome / Placeholder State ───────────────── -->
+        <!--
+          Shown on first load before any search has been made.
+          JS hides this once a search is performed.
+        -->
+        <div class="welcome-state" id="welcome-state">
+          <div class="welcome-icon" aria-hidden="true">🌍</div>
+          <h2>Search for a City</h2>
+          <p>Enter any city name to get real-time weather information</p>
+        </div>
+
+      </main>
+    </div><!-- /.app -->
+
+    <!-- ── Application Script (loaded last so the DOM is ready) ── -->
+    <script src="js/app.js"></script>
+  </body>
+</html>

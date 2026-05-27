@@ -1,0 +1,527 @@
+/* ================================================================
+   STEP 4: Weather Dashboard — Glassmorphism Dark Theme
+   ================================================================
+   Design system concepts used here:
+     • CSS Custom Properties (variables) for consistent theming
+     • Glassmorphism  — frosted-glass cards with backdrop-filter
+     • Gradient text  — background-clip: text trick
+     • CSS Grid       — responsive stats layout
+     • Keyframe anims — background shift, fade-in-up, spinner
+     • Responsive     — single breakpoint mobile layout
+   ================================================================ */
+
+
+/* ── 1. CSS Custom Properties (Design Tokens) ────────────────── */
+:root {
+  /* Background gradient colours cycling through the animation */
+  --bg-gradient-1: #0a0a1a;   /* deep navy */
+  --bg-gradient-2: #0d1b2a;   /* dark ocean */
+  --bg-gradient-3: #1a0a2e;   /* dark violet */
+
+  /* Glass card surface */
+  --glass-bg:     rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-blur:   blur(20px);
+
+  /* Accent palette */
+  --color-primary:   #60a5fa;   /* sky blue   — links, search btn */
+  --color-secondary: #a78bfa;   /* violet     — gradients */
+  --color-accent:    #34d399;   /* emerald    — stat values */
+  --color-warning:   #fbbf24;   /* amber      — feels-like */
+  --color-danger:    #f87171;   /* rose       — errors */
+
+  /* Typography */
+  --color-text:       #f1f5f9;
+  --color-text-muted: #94a3b8;
+
+  /* Shared values */
+  --radius:     20px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* ── 2. Reset & Base ─────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--color-text);
+  min-height: 100vh;
+  overflow-x: hidden;
+
+  /*
+    Animated gradient background.
+    The 'backgroundShift' keyframe smoothly rotates between the
+    three gradient colours defined in :root.
+  */
+  background: linear-gradient(
+    135deg,
+    var(--bg-gradient-1),
+    var(--bg-gradient-2),
+    var(--bg-gradient-3)
+  );
+  background-size: 400% 400%;
+  animation: backgroundShift 12s ease infinite;
+}
+
+
+/* ── 3. Application Wrapper ──────────────────────────────────── */
+.app {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+
+/* ── 4. Header ───────────────────────────────────────────────── */
+.app-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.app-header h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+
+  /*
+    Gradient text technique:
+      1. Set a gradient as the background.
+      2. Clip the background to only show through the text shapes.
+      3. Make the text colour transparent so the gradient shows.
+  */
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.app-header p {
+  margin-top: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+
+/* ── 5. Search Section ───────────────────────────────────────── */
+.search-section {
+  margin-bottom: 2rem;
+}
+
+.search-form {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+/* Glassmorphism search input */
+.search-input {
+  flex: 1;
+  padding: 1rem 1.25rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  color: var(--color-text);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+.search-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Focus ring — accessibility */
+.search-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Gradient search button */
+.search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 1.75rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  border: none;
+  border-radius: var(--radius);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  min-width: 110px;
+}
+
+.search-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(96, 165, 250, 0.40);
+}
+
+.search-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.search-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+
+/* ── 6. Recent Searches ──────────────────────────────────────── */
+.recent-searches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Individual city pill */
+.recent-pill {
+  padding: 0.35rem 0.9rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;       /* fully rounded pill */
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.recent-pill:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(96, 165, 250, 0.10);
+}
+
+
+/* ── 7. Error Card ───────────────────────────────────────────── */
+.error-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: var(--radius);
+  color: var(--color-danger);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+/* The [hidden] attribute sets display:none natively, but we
+   override it here so our animation still plays when revealed. */
+.error-card:not([hidden]) {
+  display: flex;
+}
+
+
+/* ── 8. Weather Section ──────────────────────────────────────── */
+.weather-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: fadeInUp 0.45s ease forwards;
+}
+
+.weather-section:not([hidden]) {
+  display: flex;
+}
+
+
+/* ── 9. Main Weather Card ────────────────────────────────────── */
+.weather-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  transition: var(--transition);
+}
+
+.main-card {
+  padding: 2rem 2.25rem;
+}
+
+/* City name + sub-info */
+.city-info {
+  margin-bottom: 1.25rem;
+}
+
+.city-info h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    var(--color-text),
+    var(--color-primary)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+#country-date {
+  margin-top: 0.35rem;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* Temperature row: icon + number + description */
+.temp-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.weather-icon {
+  width: 80px;
+  height: 80px;
+  filter: drop-shadow(0 4px 16px rgba(96, 165, 250, 0.50));
+}
+
+/*
+  The temperature uses a very large font to be the focal point.
+  clamp() ensures it scales gracefully on small screens.
+*/
+.temperature {
+  display: block;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(3.5rem, 8vw, 5rem);
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.weather-desc {
+  margin-top: 0.25rem;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.feels-like {
+  color: var(--color-warning);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+
+/* ── 10. Stats Grid ──────────────────────────────────────────── */
+/*
+  CSS Grid: 4 equal columns on desktop; 2 on tablet/mobile.
+  auto-fit + minmax() automatically wraps when space is tight.
+*/
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+/* Individual stat card */
+.stat-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  transition: var(--transition);
+  cursor: default;
+}
+
+/* Hover: lift upward with a blue glow */
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(96, 165, 250, 0.35);
+  box-shadow: 0 12px 30px rgba(96, 165, 250, 0.15);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.stat-value {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  line-height: 1.1;
+}
+
+.stat-label {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+
+/* ── 11. Welcome / Placeholder State ────────────────────────── */
+.welcome-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.welcome-icon {
+  font-size: 5rem;
+  display: block;
+  margin-bottom: 1.25rem;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.welcome-state h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-state p {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+
+/* ── 12. Loading Spinner ─────────────────────────────────────── */
+/*
+  A pure CSS spinner:
+    - A circle with a transparent border on 3 sides
+    - One coloured side that spins via the 'spin' keyframe
+*/
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.30);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+/* When 'hidden' attribute is present, the spinner is invisible */
+.spinner[hidden] {
+  display: none;
+}
+
+
+/* ── 13. Keyframe Animations ─────────────────────────────────── */
+
+/*
+  backgroundShift: cycles the body gradient through different
+  positions in the colour stops, creating a slow breathing effect.
+*/
+@keyframes backgroundShift {
+  0%   { background-position:  0%  50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position:  0%  50%; }
+}
+
+/*
+  fadeInUp: slides new content in from slightly below while fading
+  in — gives a polished, modern feel to dynamically added cards.
+*/
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+  spin: continuously rotates — used by the loading spinner.
+*/
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/*
+  pulse: gently scales the welcome globe icon up and down.
+*/
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.08); }
+}
+
+
+/* ── 14. Responsive Breakpoints ─────────────────────────────── */
+@media (max-width: 600px) {
+  .app {
+    padding: 1.25rem 1rem 3rem;
+  }
+
+  /* Stack search form vertically on small screens */
+  .search-form {
+    flex-direction: column;
+  }
+
+  .search-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .main-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  /* 2 columns on mobile */
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .temp-display {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .welcome-state {
+    padding: 2.5rem 1rem;
+  }
+}

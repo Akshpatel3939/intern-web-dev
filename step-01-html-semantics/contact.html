@@ -1,0 +1,398 @@
+<!-- STEP 1: HTML5 Semantic Structure & Accessibility - No CSS styling, pure semantic HTML -->
+<!DOCTYPE html>
+<!--
+  contact.html — Contact Page
+  ─────────────────────────────────────────────────────────────────
+  This page introduces the most accessibility-critical HTML element:
+  the <form>. Accessible forms are one of the most common failures
+  in web accessibility audits.
+
+  Key accessibility patterns demonstrated here:
+    1. <label for="id"> BEFORE every input — not after, not placeholder-only
+    2. required + aria-required="true" — communicates required fields to AT
+    3. aria-describedby — links a hint/instruction to a specific input
+    4. autocomplete attributes — helps users with cognitive disabilities
+       and password managers fill forms faster
+    5. <address> — semantic contact information element
+    6. <fieldset> + <legend> — groups related form controls (optional here,
+       but shown for education)
+
+  Why NOT use placeholder as a label?
+    Placeholders disappear as soon as the user starts typing. Users with
+    memory impairments or cognitive disabilities may forget what the field
+    was asking for. Placeholders also have poor colour contrast by default
+    and are not reliably announced by all screen readers.
+    ALWAYS use a visible <label>.
+-->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Contact Alex Johnson | Web Developer Intern Portfolio</title>
+
+  <meta name="description" content="Get in touch with Alex Johnson — web development intern. Send a message, ask about collaborations, or just say hello.">
+  <meta name="keywords" content="contact Alex Johnson, web developer, intern, hire, collaborate, get in touch">
+  <meta name="author" content="Alex Johnson">
+
+  <!-- ── Open Graph Tags for the Contact page ─────────────────── -->
+  <meta property="og:title" content="Contact Alex Johnson | Web Developer Intern">
+  <meta property="og:description" content="Reach out to Alex Johnson for internship opportunities, collaborations, or questions about web development.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://alexjohnson.dev/contact.html">
+
+</head>
+
+<body>
+
+  <!-- ============================================================
+    SKIP LINK — always the first focusable element
+  ============================================================ -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+
+  <!-- ============================================================
+    SITE HEADER — consistent across all pages
+  ============================================================ -->
+  <header>
+
+    <p><strong>Alex Johnson</strong> — Web Developer Intern</p>
+
+    <nav role="navigation" aria-label="Main Navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+
+        <!-- aria-current="page" on Contact — we are on this page -->
+        <li><a href="contact.html" aria-current="page">Contact</a></li>
+      </ul>
+    </nav>
+
+  </header>
+  <!-- end site header -->
+
+
+  <!-- ============================================================
+    MAIN CONTENT
+  ============================================================ -->
+  <main id="main-content" role="main">
+
+
+    <!-- ──────────────────────────────────────────────────────────
+      CONTACT SECTION
+    ────────────────────────────────────────────────────────────── -->
+    <section aria-labelledby="contact-heading">
+
+      <h1 id="contact-heading">Contact Me</h1>
+
+      <p>
+        I'd love to hear from you! Whether you have a question about one
+        of my projects, want to discuss a collaboration, or just want to
+        say hello — fill out the form below and I'll get back to you
+        within 1–2 business days.
+      </p>
+
+
+      <!-- ══════════════════════════════════════════════════════
+        ACCESSIBLE CONTACT FORM
+        ══════════════════════════════════════════════════════════
+        <form action="#" method="POST">
+        ────────────────────────────────────────────────────────────
+        action="#": Placeholder — in production this would be a
+          server endpoint (e.g., "/api/contact" or a form service URL).
+
+        method="POST": Correct for forms that submit data. GET embeds
+          form data in the URL (visible in browser history — bad for
+          forms with personal data). POST sends data in the request body.
+
+        novalidate is NOT included here: We want the browser's native
+          HTML5 validation to work. In Step 3 (JavaScript), we may add
+          custom validation and then add novalidate.
+      ════════════════════════════════════════════════════════ -->
+      <form action="#" method="POST">
+
+        <!-- ──────────────────────────────────────────────────────
+          FORM FIELDS — THE LABEL RULE
+          ──────────────────────────────────────────────────────────
+          THE GOLDEN RULE OF ACCESSIBLE FORMS:
+          Every interactive control (<input>, <textarea>, <select>)
+          MUST have an associated <label>.
+
+          How to associate a label:
+          METHOD 1 (used here): for/id pairing
+            <label for="name">Name</label>
+            <input id="name" ...>
+            The for attribute value MUST exactly match the id attribute
+            value of the input. This programmatically links them so:
+              - Clicking the label focuses the input (larger click target)
+              - Screen readers announce the label when the input is focused
+              - The association is exposed in the accessibility tree
+
+          METHOD 2: Wrapping (implicit association)
+            <label>Name <input type="text" ...></label>
+            Works but less flexible for CSS layout.
+
+          LABEL PLACEMENT: Labels should come BEFORE their inputs
+          (except for checkboxes and radio buttons, where they follow).
+          This is the expected reading order and matches visual scanning.
+        ────────────────────────────────────────────────────────── -->
+
+
+        <!-- ── FULL NAME FIELD ──────────────────────────────────
+          The asterisk (*) visually indicates a required field.
+          IMPORTANT: The asterisk alone is not accessible — screen
+          readers may just read it as "asterisk". In production,
+          we would add a note at the top of the form:
+          "Fields marked with * are required."
+          We've included that note below.
+        ────────────────────────────────────────────────────────── -->
+        <p>Fields marked with <abbr title="required">*</abbr> are required.</p>
+        <!--
+          <abbr title="required">: The <abbr> element marks an
+          abbreviation and provides its expansion via the title attribute.
+          Screen readers may announce "required" when they encounter this.
+          Sighted users see a dotted underline and get a tooltip on hover.
+        -->
+
+        <div>
+          <!-- label comes BEFORE the input -->
+          <label for="name">Full Name <abbr title="required">*</abbr></label>
+
+          <!--
+            type="text": Appropriate for a full name field.
+            id="name": Must match <label for="name"> exactly.
+            name="name": Server-side key for this field's value.
+            required: HTML5 built-in validation. Browser will prevent
+              form submission if this field is empty.
+            aria-required="true": ARIA equivalent of required. While
+              modern browsers expose the required attribute to AT,
+              aria-required ensures older AT understands this field
+              cannot be left blank.
+            autocomplete="name": Tells the browser (and password
+              managers) what type of data to suggest. Helps users with
+              motor disabilities who struggle to type long values.
+              WCAG 1.3.5 requires autocomplete on personal data inputs.
+          -->
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            aria-required="true"
+            autocomplete="name"
+            placeholder="e.g. Jane Smith"
+          >
+          <!--
+            placeholder: Optional. Provides an example/hint inside
+            the field. Note: this is an EXAMPLE value, not a label —
+            never remove the <label> and use only placeholder.
+          -->
+        </div>
+        <!-- end name field -->
+
+
+        <!-- ── EMAIL ADDRESS FIELD ──────────────────────────────
+          type="email": Tells the browser this is an email field.
+            Benefits:
+            - Mobile keyboards show the @ symbol prominently
+            - Browser validates email format before submission
+            - Screen readers may announce "edit, email"
+        ────────────────────────────────────────────────────────── -->
+        <div>
+          <label for="email">Email Address <abbr title="required">*</abbr></label>
+
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            aria-required="true"
+            autocomplete="email"
+            placeholder="e.g. jane@example.com"
+          >
+        </div>
+        <!-- end email field -->
+
+
+        <!-- ── SUBJECT FIELD ────────────────────────────────────
+          Subject is optional (no required attribute or *).
+          This is a free-text field — type="text" is appropriate.
+        ────────────────────────────────────────────────────────── -->
+        <div>
+          <label for="subject">Subject</label>
+
+          <input
+            type="text"
+            id="subject"
+            name="subject"
+            autocomplete="off"
+            placeholder="e.g. Project Collaboration"
+          >
+          <!--
+            autocomplete="off": For subject, we don't want browser
+            suggestions as the content is too context-specific.
+          -->
+        </div>
+        <!-- end subject field -->
+
+
+        <!-- ── MESSAGE TEXTAREA ─────────────────────────────────
+          <textarea>: Multi-line text input. Note it is a separate
+          element from <input> and requires a closing tag.
+
+          aria-describedby="message-hint":
+            This is one of the most important ARIA patterns for forms.
+            It links the textarea to a helper text element by ID.
+            Screen readers will announce the label ("Message"),
+            then the hint text after a brief pause:
+            "Message, required. Please provide details about your inquiry."
+
+            This is different from aria-labelledby:
+              aria-labelledby = the accessible name (replaces label text)
+              aria-describedby = supplementary description (adds to label)
+        ────────────────────────────────────────────────────────── -->
+        <div>
+          <label for="message">Message <abbr title="required">*</abbr></label>
+
+          <textarea
+            id="message"
+            name="message"
+            rows="5"
+            required
+            aria-required="true"
+            aria-describedby="message-hint"
+            placeholder="Tell me about your project, question, or idea..."
+          ></textarea>
+          <!--
+            rows="5": Sets the initial visible height of the textarea.
+            The user can still type more — it will scroll or auto-resize
+            (with JS/CSS). 5 rows gives a reasonable default size.
+          -->
+
+          <!-- This <span> is the hint text linked via aria-describedby.
+            id="message-hint" must match the aria-describedby value above.
+            It is visible to all users — not hidden. Screen readers also
+            announce it when the textarea receives focus. -->
+          <span id="message-hint">
+            Please provide details about your inquiry. The more context
+            you give, the better I can respond to your message.
+          </span>
+        </div>
+        <!-- end message field -->
+
+
+        <!-- ── SUBMIT BUTTON ─────────────────────────────────────
+          <button type="submit">: Semantically correct submit button.
+            type="submit" is the default for <button> inside <form>,
+            but always declare it explicitly to prevent ambiguity.
+
+          Why NOT <input type="submit"> ?
+            <button> is more flexible — it can contain HTML content
+            (e.g., an icon + text) and is easier to style. Both are
+            accessible, but <button> is modern best practice.
+
+          Why NOT <div onclick="submitForm()"> ?
+            A <div> is not focusable by keyboard by default, cannot be
+            activated by pressing Enter/Space, and has no semantic role.
+            NEVER use <div> or <span> as interactive controls.
+        ────────────────────────────────────────────────────────── -->
+        <div>
+          <button type="submit">Send Message</button>
+        </div>
+
+      </form>
+      <!-- end contact form -->
+
+
+      <!-- ──────────────────────────────────────────────────────────
+        <address> — Contact Information
+        ──────────────────────────────────────────────────────────────
+        <address>: A semantic HTML element specifically for contact
+          information related to the nearest <article> or <body>.
+
+        Common misconception: <address> is NOT just for postal addresses.
+          It is for ANY contact information: email, phone, location, URLs.
+
+        When used inside <body> (or <main>), <address> refers to the
+        contact info for the site/author as a whole.
+
+        Screen readers may present <address> content differently,
+        and search engines (Google) use it to extract contact data
+        for rich results.
+      ────────────────────────────────────────────────────────────── -->
+      <address>
+        <h2>Direct Contact</h2>
+
+        <p>Prefer email? Reach me directly:</p>
+
+        <!-- mailto: link — opens the user's email client with the
+          To field pre-filled. aria-label adds context about what
+          happens when clicked. -->
+        <p>
+          <strong>Email:</strong>
+          <a
+            href="mailto:alex.johnson@example.com"
+            aria-label="Send an email to Alex Johnson at alex.johnson@example.com"
+          >alex.johnson@example.com</a>
+        </p>
+
+        <!-- Location information — no href needed, this is plain text -->
+        <p>
+          <strong>Location:</strong>
+          Riverside, California, USA
+        </p>
+
+        <p>
+          <strong>Availability:</strong>
+          Open to internship extensions and full-time opportunities
+          starting Summer 2026.
+        </p>
+
+      </address>
+      <!-- end address -->
+
+
+    </section>
+    <!-- end contact section -->
+
+
+  </main>
+  <!-- end main#main-content -->
+
+
+  <!-- ============================================================
+    SITE FOOTER — consistent across all pages
+  ============================================================ -->
+  <footer role="contentinfo">
+
+    <p>&copy; 2026 Alex Johnson. All rights reserved.</p>
+
+    <nav aria-label="Social Links">
+      <ul>
+        <li>
+          <a
+            href="https://github.com"
+            aria-label="Visit Alex Johnson's GitHub profile (opens in new tab)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >GitHub</a>
+        </li>
+        <li>
+          <a
+            href="https://linkedin.com"
+            aria-label="Visit Alex Johnson's LinkedIn profile (opens in new tab)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >LinkedIn</a>
+        </li>
+      </ul>
+    </nav>
+
+  </footer>
+  <!-- end site footer -->
+
+
+</body>
+</html>

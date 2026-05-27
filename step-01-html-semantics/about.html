@@ -1,0 +1,281 @@
+<!-- STEP 1: HTML5 Semantic Structure & Accessibility - No CSS styling, pure semantic HTML -->
+<!DOCTYPE html>
+<!--
+  about.html — About Page
+  ─────────────────────────────────────────────────────────────────
+  This page uses <article> as the primary content wrapper because
+  the "About Me" content is self-contained and could theoretically
+  be syndicated or re-used on its own (like a bio card).
+
+  Key semantic elements introduced here vs index.html:
+    - <article>: Self-contained, independently distributable content
+    - <aside>:   Related but supplementary content
+    - <dl>:      Definition list — perfect for key/value pairs like
+                 skill categories and their associated technologies
+-->
+<html lang="en">
+
+<head>
+  <!-- charset declared first — browser must know encoding before
+    parsing anything else in <head> -->
+  <meta charset="UTF-8">
+
+  <!-- Responsive viewport — essential for mobile-first design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Page-specific title: Convention is "Page Name | Site Name"
+    This helps users identify tabs and improves SEO for this page. -->
+  <title>About Alex Johnson | Web Developer Intern Portfolio</title>
+
+  <!-- Page-specific description: each page should have a unique
+    meta description tailored to its content (not copied from index). -->
+  <meta name="description" content="Learn about Alex Johnson — a Computer Science student and web development intern with a passion for accessible, user-centred web experiences.">
+
+  <meta name="keywords" content="about Alex Johnson, CS student, web development intern, frontend developer, accessibility advocate">
+  <meta name="author" content="Alex Johnson">
+
+  <!-- ── Open Graph Tags for the About page ───────────────────── -->
+  <meta property="og:title" content="About Alex Johnson | Web Developer Intern">
+  <meta property="og:description" content="Get to know Alex Johnson — Computer Science student, web development intern, and accessibility enthusiast.">
+  <meta property="og:type" content="profile">
+  <meta property="og:url" content="https://alexjohnson.dev/about.html">
+
+</head>
+
+<body>
+
+  <!-- ============================================================
+    SKIP LINK
+    ────────────────────────────────────────────────────────────────
+    Identical skip link pattern used on every page of the site.
+    Consistency is key — users of assistive technology rely on
+    predictable patterns across pages.
+  ============================================================ -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+
+  <!-- ============================================================
+    SITE HEADER — identical structure across all pages
+    Consistent headers help users orient themselves and trust the site.
+  ============================================================ -->
+  <header>
+
+    <p><strong>Alex Johnson</strong> — Web Developer Intern</p>
+
+    <nav role="navigation" aria-label="Main Navigation">
+      <ul>
+        <!-- No aria-current="page" on Home — we are on the About page -->
+        <li><a href="index.html">Home</a></li>
+
+        <!-- aria-current="page" marks About as the active page.
+          Only one link per nav should have this attribute. -->
+        <li><a href="about.html" aria-current="page">About</a></li>
+
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+  </header>
+  <!-- end site header -->
+
+
+  <!-- ============================================================
+    <main id="main-content" role="main">
+    The skip link targets this element. It wraps ALL primary,
+    page-unique content — everything that is NOT repeated across pages.
+  ============================================================ -->
+  <main id="main-content" role="main">
+
+
+    <!-- ──────────────────────────────────────────────────────────
+      <article aria-labelledby="about-heading">
+      ──────────────────────────────────────────────────────────────
+      Why <article> instead of <section> here?
+
+      <article>: Used for content that is self-contained and could
+        stand on its own — a blog post, a news article, a user's bio.
+        The "About Me" content is exactly this: a complete, standalone
+        piece of content about a specific person.
+
+      <section>: Used for thematic groupings WITHIN a page where the
+        content is not independently meaningful without context.
+
+      aria-labelledby="about-heading": Associates the article with its
+        visible h1 heading. Screen reader users navigating by landmarks
+        will hear "About Me, article" when they arrive here.
+    ────────────────────────────────────────────────────────────── -->
+    <article aria-labelledby="about-heading">
+
+      <!-- h1: Primary heading for this page. There is exactly one
+        h1 per page, identifying the page's main topic. -->
+      <h1 id="about-heading">About Me</h1>
+
+
+      <!-- ────────────────────────────────────────────────────────
+        BIO SECTION
+        ────────────────────────────────────────────────────────────
+        <section> nested inside <article>: Valid and common pattern.
+        Each <section> within the article represents a distinct
+        sub-topic of the overall "About Me" article.
+
+        aria-labelledby links this section to the h2 "My Story"
+        so screen reader landmarks include the section label.
+      ──────────────────────────────────────────────────────────── -->
+      <section aria-labelledby="bio-heading">
+
+        <!-- h2: Second-level heading, child of the h1 above.
+          Maintains a logical, nested heading hierarchy. -->
+        <h2 id="bio-heading">My Story</h2>
+
+        <p>
+          Hi! I'm Alex Johnson, a third-year Computer Science student at
+          Riverside University. I've always been drawn to the intersection
+          of technology and creativity — and web development is exactly
+          where those two worlds meet. Whether it's crafting a pixel-perfect
+          layout or debugging a tricky JavaScript function, I love every
+          part of the process.
+        </p>
+
+        <p>
+          This year, I landed my first internship as a Web Developer Intern,
+          and it has been a transformative experience. I've had the chance to
+          work on real products used by real people, which has given me a
+          deep appreciation for writing code that is not only functional but
+          also inclusive and accessible. I strongly believe that the web
+          should work for <em>everyone</em> — regardless of disability,
+          device type, or internet speed.
+        </p>
+
+        <!-- <em>: Emphasis — conveys stressed emphasis, like italics
+          in spoken language. Screen readers may change intonation.
+          Use <em> for semantic emphasis, not just visual styling.
+          Use <i> only for non-emphatic italic text (e.g., technical
+          terms, foreign phrases). -->
+
+        <p>
+          Outside of coding, I enjoy contributing to open-source projects,
+          reading about UX research, and helping friends build their first
+          websites. I'm actively learning React and Node.js to expand my
+          skill set into full-stack development. My goal is to join a
+          team that cares about building things that matter — and to keep
+          growing every single day.
+        </p>
+
+      </section>
+      <!-- end bio section -->
+
+
+      <!-- ────────────────────────────────────────────────────────
+        SKILLS ASIDE
+        ────────────────────────────────────────────────────────────
+        <aside>: Represents content that is tangentially related to
+          the content surrounding it. Inside this <article>, the
+          skills sidebar is supplementary — related to "About Alex"
+          but not part of the main narrative flow.
+
+        When <aside> is a child of an <article>, it is related to
+        that article. When placed directly inside <body>/<main>, it
+        represents content tangentially related to the whole page
+        (like a sidebar ad or related links panel).
+
+        aria-labelledby="skills-aside-heading": Labels the aside
+        so screen reader users understand what the landmark contains
+        before diving in.
+      ──────────────────────────────────────────────────────────── -->
+      <aside aria-labelledby="skills-aside-heading">
+
+        <h2 id="skills-aside-heading">My Skills</h2>
+
+        <p>A snapshot of the technologies and tools I use:</p>
+
+        <!-- ──────────────────────────────────────────────────────
+          <dl> — Description / Definition List
+          ──────────────────────────────────────────────────────────
+          <dl> is the correct semantic element for key-value pairs,
+          glossary entries, or categorised lists. Structure:
+
+            <dl>
+              <dt> — Description Term (the "key")
+              <dd> — Description Detail (the "value")
+            </dl>
+
+          Here each <dt> is a skill category and each <dd> is the
+          list of technologies in that category.
+
+          Why NOT use <ul> here?
+          Because the data has an inherent term→definition
+          relationship. <dl> communicates that structure semantically,
+          which assistive technologies can expose to users.
+        ────────────────────────────────────────────────────────── -->
+        <dl>
+
+          <!-- Frontend Skills -->
+          <dt>Frontend Development</dt>
+          <dd>HTML5 — Semantic markup and document structure</dd>
+          <dd>CSS3 — Flexbox, Grid, custom properties, animations</dd>
+          <dd>JavaScript — ES6+, DOM manipulation, async/await</dd>
+
+          <!-- Tools & Workflow -->
+          <dt>Tools &amp; Workflow</dt>
+          <!-- &amp; is the HTML entity for the ampersand character &
+            Never write a bare & in HTML — it starts an entity reference
+            and may cause parsing errors. -->
+          <dd>Git &amp; GitHub — Version control and collaboration</dd>
+          <dd>VS Code — Primary code editor with accessibility extensions</dd>
+          <dd>Chrome DevTools — Debugging, performance profiling, accessibility audits</dd>
+
+          <!-- Currently Learning -->
+          <dt>Currently Learning</dt>
+          <dd>React — Component-based UI development</dd>
+          <dd>Node.js — Server-side JavaScript and REST APIs</dd>
+
+        </dl>
+
+      </aside>
+      <!-- end skills aside -->
+
+
+    </article>
+    <!-- end about article -->
+
+
+  </main>
+  <!-- end main#main-content -->
+
+
+  <!-- ============================================================
+    SITE FOOTER — identical across all pages
+    Consistent footer structure aids navigation and trust.
+  ============================================================ -->
+  <footer role="contentinfo">
+
+    <p>&copy; 2026 Alex Johnson. All rights reserved.</p>
+
+    <nav aria-label="Social Links">
+      <ul>
+        <li>
+          <a
+            href="https://github.com"
+            aria-label="Visit Alex Johnson's GitHub profile (opens in new tab)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >GitHub</a>
+        </li>
+        <li>
+          <a
+            href="https://linkedin.com"
+            aria-label="Visit Alex Johnson's LinkedIn profile (opens in new tab)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >LinkedIn</a>
+        </li>
+      </ul>
+    </nav>
+
+  </footer>
+  <!-- end site footer -->
+
+
+</body>
+</html>

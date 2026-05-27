@@ -1,0 +1,280 @@
+<!-- STEP 1: HTML5 Semantic Structure & Accessibility - No CSS styling, pure semantic HTML -->
+<!DOCTYPE html>
+<!--
+  projects.html — Projects Page
+  ─────────────────────────────────────────────────────────────────
+  This page demonstrates using MULTIPLE <article> elements within
+  a single <section>. Each project card is a self-contained,
+  independently meaningful piece of content — making <article>
+  the correct semantic choice.
+
+  Key patterns introduced here:
+    - Multiple <article> elements as "cards"
+    - role="article" (explicit, for older AT)
+    - aria-labelledby linking each article to its unique h2
+    - Unique IDs for every heading (no duplicate IDs allowed in HTML)
+    - Descriptive aria-label on action links ("View X on GitHub")
+    - <ul> for technologies (unordered, no inherent rank)
+-->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Projects | Alex Johnson Web Developer Intern Portfolio</title>
+
+  <meta name="description" content="Explore Alex Johnson's web development projects — including a portfolio website, a JavaScript to-do app, and a real-time weather dashboard built with the Fetch API.">
+  <meta name="keywords" content="web projects, portfolio, to-do app, weather dashboard, HTML5, CSS3, JavaScript, Fetch API, Alex Johnson">
+  <meta name="author" content="Alex Johnson">
+
+  <!-- ── Open Graph Tags for the Projects page ────────────────── -->
+  <meta property="og:title" content="Projects | Alex Johnson — Web Developer Intern">
+  <meta property="og:description" content="See the web projects built by Alex Johnson during their web development internship — covering HTML5, CSS3, JavaScript, and modern browser APIs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://alexjohnson.dev/projects.html">
+
+</head>
+
+<body>
+
+  <!-- ============================================================
+    SKIP LINK — always the first focusable element on the page
+  ============================================================ -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+
+  <!-- ============================================================
+    SITE HEADER — consistent across all pages
+  ============================================================ -->
+  <header>
+
+    <p><strong>Alex Johnson</strong> — Web Developer Intern</p>
+
+    <nav role="navigation" aria-label="Main Navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+
+        <!-- aria-current="page" on Projects — we are on this page -->
+        <li><a href="projects.html" aria-current="page">Projects</a></li>
+
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+  </header>
+  <!-- end site header -->
+
+
+  <!-- ============================================================
+    MAIN CONTENT
+  ============================================================ -->
+  <main id="main-content" role="main">
+
+
+    <!-- ──────────────────────────────────────────────────────────
+      PROJECTS SECTION
+      ──────────────────────────────────────────────────────────────
+      <section> wraps all project cards. It represents the thematic
+      grouping of "my projects". aria-labelledby points to the h1
+      so screen reader users hear "My Projects, region" when they
+      navigate to this landmark.
+    ────────────────────────────────────────────────────────────── -->
+    <section aria-labelledby="projects-heading">
+
+      <h1 id="projects-heading">My Projects</h1>
+
+      <p>
+        Here is a selection of projects I've built during my internship
+        and personal learning journey. Each one taught me something new
+        about web development, problem-solving, and writing code for
+        real users.
+      </p>
+
+
+      <!-- ══════════════════════════════════════════════════════
+        PROJECT 1: Portfolio Website
+        ══════════════════════════════════════════════════════════
+        <article role="article" aria-labelledby="project-portfolio-heading">
+        ────────────────────────────────────────────────────────────
+        Why <article> for each project card?
+
+        Each project is self-contained, independently meaningful content.
+        If extracted from the page, each card still makes complete sense
+        on its own — just like a news article pulled from a news website.
+
+        role="article": Redundant with <article> but included for older
+          assistive technology support.
+
+        aria-labelledby="project-portfolio-heading": Associates this
+          article with its h2. Screen readers announce:
+          "Portfolio Website, article" when navigating by landmarks or
+          article roles. Without this, the article is unlabelled.
+
+        ID UNIQUENESS RULE: Every id attribute in an HTML document MUST
+          be unique. Since we have 3 projects each with a heading, we
+          use descriptive, unique IDs:
+          - project-portfolio-heading
+          - project-todo-heading
+          - project-weather-heading
+      ════════════════════════════════════════════════════════ -->
+      <article role="article" aria-labelledby="project-portfolio-heading">
+
+        <!-- h2: Project title heading. Level 2 is correct here —
+          we are one level below the section's h1. -->
+        <h2 id="project-portfolio-heading">Portfolio Website</h2>
+
+        <p>
+          A personal portfolio website designed and built from scratch
+          to showcase my web development skills. This project taught me
+          how to apply semantic HTML5 structure, ensure keyboard
+          navigability, and implement WCAG 2.1 accessibility guidelines
+          throughout every page.
+        </p>
+
+        <!-- Technologies list: <ul> because technologies have no
+          inherent rank or sequential order. -->
+        <ul aria-label="Technologies used in Portfolio Website">
+          <li>HTML5 — Semantic structure and landmark regions</li>
+          <li>CSS3 — Custom properties, Flexbox, and Grid layout</li>
+          <li>Accessibility — ARIA roles, skip links, focus management</li>
+        </ul>
+
+        <!-- ──────────────────────────────────────────────────────
+          ACTION LINK WITH DESCRIPTIVE aria-label
+          ──────────────────────────────────────────────────────────
+          The link text "View on GitHub" is ambiguous without context.
+          A screen reader user navigating a list of links would hear:
+            "View on GitHub" — which project?!
+
+          aria-label="View Portfolio Website on GitHub" replaces the
+          visible text with a fully descriptive label for AT users,
+          while sighted users still see the shorter "View on GitHub".
+
+          This pattern satisfies WCAG 2.4.6 (Headings and Labels) and
+          2.4.9 (Link Purpose — Link Only).
+        ────────────────────────────────────────────────────────── -->
+        <p>
+          <a
+            href="#"
+            aria-label="View Portfolio Website on GitHub (link placeholder)"
+          >View on GitHub</a>
+        </p>
+
+      </article>
+      <!-- end project: Portfolio Website -->
+
+
+      <!-- ══════════════════════════════════════════════════════
+        PROJECT 2: To-Do App
+      ════════════════════════════════════════════════════════ -->
+      <article role="article" aria-labelledby="project-todo-heading">
+
+        <h2 id="project-todo-heading">To-Do App</h2>
+
+        <p>
+          A fully functional task manager built with vanilla JavaScript.
+          Users can add, complete, and delete tasks, with all data
+          persisted to the browser's <code>localStorage</code> so tasks
+          survive page refreshes. This project deepened my understanding
+          of the DOM, event handling, and browser storage APIs.
+        </p>
+
+        <!-- <code>: Inline code element. Used for short code snippets,
+          file names, variable names, etc. Screen readers may announce
+          it differently to signal it is technical content. -->
+
+        <ul aria-label="Technologies used in To-Do App">
+          <li>HTML5 — Semantic form elements and ARIA live regions</li>
+          <li>CSS3 — Transitions and state-based styling (done/not done)</li>
+          <li>JavaScript — ES6+, DOM API, localStorage, event delegation</li>
+        </ul>
+
+        <p>
+          <a
+            href="#"
+            aria-label="View To-Do App on GitHub (link placeholder)"
+          >View on GitHub</a>
+        </p>
+
+      </article>
+      <!-- end project: To-Do App -->
+
+
+      <!-- ══════════════════════════════════════════════════════
+        PROJECT 3: Weather Dashboard
+      ════════════════════════════════════════════════════════ -->
+      <article role="article" aria-labelledby="project-weather-heading">
+
+        <h2 id="project-weather-heading">Weather Dashboard</h2>
+
+        <p>
+          A real-time weather application that fetches live weather data
+          for any city using the OpenWeatherMap API. The dashboard
+          displays current temperature, humidity, wind speed, and a
+          5-day forecast. This project introduced me to asynchronous
+          JavaScript, the Fetch API, JSON parsing, and handling API
+          errors gracefully for users.
+        </p>
+
+        <ul aria-label="Technologies used in Weather Dashboard">
+          <li>HTML5 — Semantic output and status regions</li>
+          <li>CSS3 — Responsive card layout with CSS Grid</li>
+          <li>JavaScript — Fetch API, async/await, JSON, error handling</li>
+          <li>OpenWeatherMap API — RESTful weather data service</li>
+        </ul>
+
+        <p>
+          <a
+            href="#"
+            aria-label="View Weather Dashboard on GitHub (link placeholder)"
+          >View on GitHub</a>
+        </p>
+
+      </article>
+      <!-- end project: Weather Dashboard -->
+
+
+    </section>
+    <!-- end projects section -->
+
+
+  </main>
+  <!-- end main#main-content -->
+
+
+  <!-- ============================================================
+    SITE FOOTER — consistent across all pages
+  ============================================================ -->
+  <footer role="contentinfo">
+
+    <p>&copy; 2026 Alex Johnson. All rights reserved.</p>
+
+    <nav aria-label="Social Links">
+      <ul>
+        <li>
+          <a
+            href="https://github.com"
+            aria-label="Visit Alex Johnson's GitHub profile (opens in new tab)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >GitHub</a>
+        </li>
+        <li>
+          <a
+            href="https://linkedin.com"
+            aria-label="Visit Alex Johnson's LinkedIn profile (opens in new tab)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >LinkedIn</a>
+        </li>
+      </ul>
+    </nav>
+
+  </footer>
+  <!-- end site footer -->
+
+
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!-- STEP 1: HTML5 Semantic Structure & Accessibility - No CSS styling, pure semantic HTML -->
+<!DOCTYPE html>
+<!--
+  DOCTYPE declaration: Tells the browser this is an HTML5 document.
+  Always place this as the very first line — before everything else.
+-->
+<html lang="en">
+
+
+<head>
+<meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- title: Shown in browser tab, bookmarks, and search engine results.
+    Keep it descriptive and concise (50–60 characters recommended). -->
+  <title>Alex Johnson | Web Developer Intern Portfolio</title>
+
+  <!-- meta description: Shown as the snippet under a page title in Google
+    results. Does not affect rankings directly but strongly affects
+    click-through rate. Keep under 160 characters. -->
+  <meta name="description" content="Alex Johnson's web developer intern portfolio — showcasing accessible, semantic, and beautiful web projects built with HTML5, CSS3, and JavaScript.">
+
+  <!-- meta keywords: Was important for SEO in the early web. Modern search
+    engines largely ignore it, but it is still good practice to include
+    for documentation and some niche search tools. -->
+  <meta name="keywords" content="web developer intern, portfolio, HTML5, CSS3, JavaScript, accessibility, Alex Johnson">
+
+  <!-- meta author: Identifies the page creator for search engines and
+    aggregators. -->
+  <meta name="author" content="Alex Johnson">
+
+  <!-- ── Open Graph Tags ──────────────────────────────────────────
+    Open Graph (OG) tags control how the page looks when shared on
+    social media platforms like Facebook, LinkedIn, Slack, etc.
+    They are defined by the og: prefix in the property attribute.
+  ──────────────────────────────────────────────────────────────── -->
+  <meta property="og:title" content="Alex Johnson | Web Developer Intern Portfolio">
+  <meta property="og:description" content="Showcasing accessible and beautiful web experiences built by Alex Johnson, web development intern.">
+  <!-- og:type tells platforms what kind of content this is.
+    "website" is the default for standard web pages. -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://alexjohnson.dev/index.html">
+
+</head>
+
+<body>
+
+  <!-- ============================================================
+    SKIP NAVIGATION LINK
+    ────────────────────────────────────────────────────────────────
+    This is the #1 accessibility pattern for keyboard users and
+    screen reader users. Without it, every page load forces keyboard
+    users to Tab through all navigation links before reaching the
+    main content.
+
+    How it works:
+      - The link is visually hidden by default (handled in CSS step).
+      - When a keyboard user presses Tab as their FIRST action, this
+        link becomes visible and focused.
+      - Pressing Enter jumps focus directly to #main-content,
+        skipping the nav entirely.
+    This satisfies WCAG 2.1 Success Criterion 2.4.1 (Bypass Blocks).
+  ============================================================ -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+
+  <!-- ============================================================
+    <header>
+    ────────────────────────────────────────────────────────────────
+    The <header> landmark represents introductory content for its
+    nearest sectioning ancestor. When placed directly inside <body>,
+    it becomes the site-wide banner landmark (role="banner" is
+    implied automatically by browsers and screen readers).
+
+    It typically contains the site logo, site title, and primary nav.
+  ============================================================ -->
+  <header>
+
+    <!-- Site identity: who owns this portfolio -->
+    <p><strong>Alex Johnson</strong> — Web Developer Intern</p>
+
+    <!-- ──────────────────────────────────────────────────────────
+      <nav role="navigation" aria-label="Main Navigation">
+
+      <nav>: Semantic element for a major block of navigation links.
+        Not every group of links needs <nav> — only primary/secondary
+        site navigation. Screen readers expose <nav> as a "navigation"
+        landmark.
+
+      role="navigation": Redundant with <nav> but included explicitly
+        for older assistive technologies that may not recognise HTML5
+        landmark elements.
+
+      aria-label="Main Navigation": Because a page can have multiple
+        <nav> elements (e.g., main nav, footer nav), the aria-label
+        distinguishes them. Screen readers announce:
+        "Main Navigation, navigation" when the user enters this region.
+    ────────────────────────────────────────────────────────────── -->
+    <nav role="navigation" aria-label="Main Navigation">
+
+      <!-- <ul> inside <nav>: Best practice. A list communicates to
+        screen readers how many items the navigation has, e.g.,
+        "list, 4 items". This helps users decide whether to explore. -->
+      <ul>
+
+        <!-- aria-current="page": WCAG technique for indicating the
+          currently active page link. Screen readers announce
+          "current page" alongside the link text. Only ONE link
+          per navigation should carry aria-current="page" at a time.
+          Here, index.html is the active page. -->
+        <li><a href="index.html" aria-current="page">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+
+      </ul>
+
+    </nav>
+    <!-- end nav#main-navigation -->
+
+  </header>
+  <!-- end site header -->
+
+
+  <!-- ============================================================
+    <main id="main-content" role="main">
+    ────────────────────────────────────────────────────────────────
+    <main>: Represents the dominant, unique content of the document.
+      There should be only ONE <main> per page. It excludes content
+      repeated across pages like headers, footers, and navs.
+
+    id="main-content": This is the target of the skip link above.
+      When a user activates the skip link, focus lands here.
+
+    role="main": Redundant with <main> but included for older AT support.
+      Screen readers expose this as a "main" landmark, allowing users
+      to jump directly to primary content.
+  ============================================================ -->
+  <main id="main-content" role="main">
+
+
+    <!-- ──────────────────────────────────────────────────────────
+      HERO SECTION
+      ──────────────────────────────────────────────────────────────
+      <section>: A thematic grouping of content, distinct from other
+        sections on the page. Unlike <div>, a <section> carries
+        semantic meaning — it implies a self-contained topic area.
+
+      aria-labelledby="hero-heading": Associates this section with its
+        visible heading. Screen readers announce the section heading
+        when a user navigates to this landmark, helping them understand
+        what region they are entering without reading all the content.
+        This satisfies WCAG 2.4.6 (Headings and Labels).
+    ────────────────────────────────────────────────────────────── -->
+    <section aria-labelledby="hero-heading">
+
+      <!-- <h1>: The most important heading on the page. There should
+        generally be only ONE <h1> per page (per HTML5 outline rules).
+        It identifies the primary topic of the entire page.
+
+        id="hero-heading": Referenced by aria-labelledby above so
+        assistive technologies can associate the heading with the section. -->
+      <h1 id="hero-heading">Hi, I'm Alex Johnson</h1>
+
+      <p>
+        I'm a web development intern passionate about building accessible
+        and beautiful web experiences. I believe the web should work for
+        everyone — regardless of ability, device, or connection speed.
+        Welcome to my portfolio!
+      </p>
+
+      <!-- Prominent call-to-action link -->
+      <!-- aria-label provides extra context for screen readers beyond
+        the visible link text "View My Projects". Without it, the link
+        is still understandable, but explicit labels improve clarity. -->
+      <p>
+        <a href="projects.html" aria-label="View Alex Johnson's projects portfolio">View My Projects</a>
+        &nbsp;|&nbsp;
+        <a href="contact.html" aria-label="Get in touch with Alex Johnson">Get In Touch</a>
+      </p>
+
+    </section>
+    <!-- end hero section -->
+
+
+    <!-- ──────────────────────────────────────────────────────────
+      SKILLS SECTION
+      ──────────────────────────────────────────────────────────────
+      Another <section> for a distinct content block. aria-labelledby
+      links this section to the h2 below, enabling screen reader users
+      to understand the section label when navigating by landmarks.
+    ────────────────────────────────────────────────────────────── -->
+    <section aria-labelledby="skills-heading">
+
+      <!-- <h2>: Second-level heading. Headings must follow a logical
+        hierarchy: h1 → h2 → h3, etc. Never skip heading levels (e.g.,
+        h1 directly to h3) as this breaks the document outline and
+        confuses screen reader users navigating by headings. -->
+      <h2 id="skills-heading">My Skills</h2>
+
+      <p>Here are some of the technologies and concepts I work with:</p>
+
+      <!-- <ul>: An unordered list is semantically correct here because
+        the skills have no inherent order or ranking. If the list
+        represented a ranked/ordered sequence, we would use <ol>.
+        Screen readers announce "list, 5 items" helping users gauge
+        the size of the list. -->
+      <ul>
+        <li>HTML5 — Semantic markup and document structure</li>
+        <li>CSS3 — Styling, layouts, and responsive design</li>
+        <li>JavaScript — Interactivity and dynamic content</li>
+        <li>Responsive Design — Mobile-first, fluid layouts</li>
+        <li>Accessibility — WCAG 2.1, ARIA, inclusive design principles</li>
+      </ul>
+
+    </section>
+    <!-- end skills section -->
+
+
+  </main>
+  <!-- end main#main-content -->
+
+
+  <!-- ============================================================
+    <footer role="contentinfo">
+    ────────────────────────────────────────────────────────────────
+    <footer>: Represents the footer for the page or its nearest
+      sectioning ancestor. When a direct child of <body>, it becomes
+      the "contentinfo" landmark — typically containing copyright,
+      legal info, and secondary navigation.
+
+    role="contentinfo": Redundant with <footer> at body level but
+      included for older AT. Screen readers expose this as a
+      "content information" landmark.
+  ============================================================ -->
+  <footer role="contentinfo">
+
+    <p>&copy; 2026 Alex Johnson. All rights reserved.</p>
+
+    <!-- Secondary navigation within the footer.
+      aria-label differentiates this <nav> from the header nav above.
+      Screen readers will announce "Social Links, navigation". -->
+    <nav aria-label="Social Links">
+      <ul>
+
+        <!-- aria-label on <a>: Provides a descriptive label for links
+          that might not be fully clear from their text alone, or to
+          add context for external links. Screen readers read the
+          aria-label instead of the link text when both are present.
+          Here it clarifies that the link navigates to a specific
+          external platform profile. -->
+        <li>
+          <a
+            href="https://github.com"
+            aria-label="Visit Alex Johnson's GitHub profile (opens in new tab)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >GitHub</a>
+        </li>
+
+        <!-- rel="noopener noreferrer": Security best practice for all
+          target="_blank" links. Prevents the new tab from accessing
+          the opener window via window.opener (clickjacking protection). -->
+        <li>
+          <a
+            href="https://linkedin.com"
+            aria-label="Visit Alex Johnson's LinkedIn profile (opens in new tab)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >LinkedIn</a>
+        </li>
+
+      </ul>
+    </nav>
+    <!-- end nav#social-links -->
+
+  </footer>
+  <!-- end site footer -->
+
+
+</body>
+</html>

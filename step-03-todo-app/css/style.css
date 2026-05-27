@@ -1,0 +1,721 @@
+/* ================================================================
+   STEP 3: JavaScript Logic & State Management
+   To-Do App — Main Stylesheet
+   Theme: Dark Purple / Indigo
+   ================================================================ */
+
+/* ──────────────────────────────────────────────────────────────
+   1. DESIGN TOKENS (CSS Custom Properties)
+   Centralise all colours, spacing, and effects here so that
+   changing a single value updates the whole UI consistently.
+   ────────────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg-primary:   #0d0d1a;   /* deepest layer — page background  */
+  --bg-secondary: #161625;   /* mid layer — used for gradients   */
+  --bg-card:      #1e1e35;   /* task cards and form inputs       */
+  --bg-card-hover:#252542;   /* card on hover                    */
+
+  /* Brand / Accent */
+  --color-accent:       #7c3aed;  /* purple — primary brand colour  */
+  --color-accent-light: #a78bfa;  /* lighter purple — hover states  */
+  --color-accent-glow:  rgba(124, 58, 237, 0.35); /* glow shadow   */
+  --color-cyan:         #22d3ee;  /* cyan — used in gradient text   */
+
+  /* Semantic */
+  --color-completed: #10b981; /* emerald green for completed tasks */
+  --color-danger:    #ef4444; /* red for delete / clear            */
+  --color-danger-bg: rgba(239, 68, 68, 0.12);
+
+  /* Text */
+  --color-text:       #f1f5f9; /* primary readable text            */
+  --color-text-muted: #64748b; /* secondary / placeholder text     */
+
+  /* Borders */
+  --color-border:       #2d2d4e;
+  --color-border-focus: #7c3aed;
+
+  /* Misc */
+  --radius-sm:  8px;
+  --radius:     12px;
+  --radius-lg:  20px;
+  --radius-pill:999px;
+
+  --shadow:     0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-card:0 2px 12px rgba(0, 0, 0, 0.35);
+  --shadow-glow:0 0 20px var(--color-accent-glow);
+
+  --transition: all 0.25s ease;
+  --transition-fast: all 0.15s ease;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   2. RESET & BASE
+   ────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 60%, #1a0a2e 100%);
+  color: var(--color-text);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem 4rem;
+  line-height: 1.6;
+  /* Subtle dot-grid texture */
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(124,58,237,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(34,211,238,0.05) 0%, transparent 50%),
+    linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 60%, #1a0a2e 100%);
+}
+
+/* Remove default list styles */
+ul, ol { list-style: none; }
+
+/* Remove default button styles */
+button { cursor: pointer; font-family: inherit; }
+
+/* Remove default link styles */
+a { text-decoration: none; color: inherit; }
+
+/* ──────────────────────────────────────────────────────────────
+   3. LAYOUT — App Container
+   ────────────────────────────────────────────────────────────── */
+.app-container {
+  width: 100%;
+  max-width: 600px;
+  /* Top margin gives breathing room; auto sides centre it */
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   4. HEADER
+   ────────────────────────────────────────────────────────────── */
+.app-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-top: 1rem;
+}
+
+.app-header h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  /* Gradient text: purple → cyan */
+  background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  /* Subtle text glow */
+  filter: drop-shadow(0 0 20px rgba(124, 58, 237, 0.4));
+}
+
+/* Task counter badge below the title */
+.task-counter {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: var(--bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 1rem;
+  letter-spacing: 0.02em;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   5. ADD TASK FORM
+   ────────────────────────────────────────────────────────────── */
+.add-task-form {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+/* Shared input styles used in both the form and the modal */
+.task-input {
+  flex: 1;                         /* takes all remaining space in flex container */
+  background: var(--bg-card);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: var(--transition);
+  width: 100%;
+}
+
+.task-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Purple focus ring — matches brand colour */
+.task-input:focus {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px var(--color-accent-glow);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   6. BUTTONS — Base & Variants
+   ────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.7rem 1.2rem;
+  transition: var(--transition);
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* + Add button — circular purple button */
+.btn-add {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 1;
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-add:hover {
+  background: var(--color-accent-light);
+  transform: scale(1.08) rotate(90deg);
+  box-shadow: 0 0 28px var(--color-accent-glow);
+}
+
+.btn-add:active {
+  transform: scale(0.96);
+}
+
+/* Clear completed button — subtle danger style */
+.btn-clear {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-pill);
+}
+
+.btn-clear:hover {
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+}
+
+/* Modal action buttons */
+.btn-cancel {
+  background: var(--bg-card);
+  border: 1.5px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.btn-cancel:hover {
+  background: var(--bg-card-hover);
+  color: var(--color-text);
+  border-color: var(--color-accent);
+}
+
+.btn-save {
+  background: var(--color-accent);
+  color: #fff;
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-save:hover {
+  background: var(--color-accent-light);
+  box-shadow: 0 0 20px var(--color-accent-glow);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   7. FILTER BAR
+   ────────────────────────────────────────────────────────────── */
+.filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 0.35rem;
+}
+
+/* Each filter button is pill-shaped */
+.filter-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.45rem 1rem;
+  transition: var(--transition);
+}
+
+.filter-btn:hover {
+  color: var(--color-text);
+  background: var(--bg-card-hover);
+}
+
+/* Active filter: filled purple pill */
+.filter-btn.active {
+  background: var(--color-accent);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 10px var(--color-accent-glow);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   8. TASK LIST & ITEMS
+   ────────────────────────────────────────────────────────────── */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  /* Min-height prevents layout jump when list empties */
+  min-height: 0;
+}
+
+/* Individual task item card */
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+  /* Slide-in animation when created */
+  animation: slideIn 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Accent left border using ::before pseudo-element */
+.task-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--color-accent);
+  border-radius: 4px 0 0 4px;
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.task-item:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+}
+
+.task-item:hover::before {
+  opacity: 1;
+}
+
+/* Completed task styling */
+.task-item.completed {
+  opacity: 0.7;
+}
+
+.task-item.completed::before {
+  background: var(--color-completed);
+  opacity: 1;
+}
+
+.task-item.completed .task-text {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   9. CUSTOM CHECKBOX
+   We hide the native checkbox and build a custom one with CSS.
+   The <label> wraps the <input> so clicking the label toggles it.
+   ────────────────────────────────────────────────────────────── */
+.task-checkbox-wrapper {
+  flex-shrink: 0;
+  position: relative;
+  width: 22px;
+  height: 22px;
+}
+
+/* Hide the native checkbox visually, but keep it accessible */
+.task-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  margin: 0;
+  z-index: 1;
+}
+
+/* Custom circular checkbox */
+.task-checkbox + .checkbox-ui {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  transition: var(--transition);
+  pointer-events: none;
+  position: relative;
+}
+
+.task-checkbox:hover + .checkbox-ui {
+  border-color: var(--color-accent);
+}
+
+/* Checked state: filled green circle with a ✓ */
+.task-checkbox:checked + .checkbox-ui {
+  background: var(--color-completed);
+  border-color: var(--color-completed);
+}
+
+.task-checkbox:checked + .checkbox-ui::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  /* Centre the checkmark */
+  display: block;
+  text-align: center;
+  padding-top: 1px;
+}
+
+/* Focus ring for keyboard accessibility */
+.task-checkbox:focus-visible + .checkbox-ui {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   10. TASK TEXT
+   ────────────────────────────────────────────────────────────── */
+.task-text {
+  flex: 1;            /* pushes action buttons to the right */
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--color-text);
+  word-break: break-word;
+  transition: var(--transition);
+  line-height: 1.5;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   11. TASK ACTION BUTTONS (Edit & Delete)
+   Hidden by default, shown on hover for a clean look.
+   ────────────────────────────────────────────────────────────── */
+.task-actions {
+  display: flex;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  /* Hide until parent is hovered */
+  opacity: 0;
+  transform: translateX(4px);
+  transition: var(--transition);
+}
+
+.task-item:hover .task-actions {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Base icon button */
+.task-action-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  transition: var(--transition-fast);
+  line-height: 1;
+}
+
+/* Edit button — purple accent on hover */
+.btn-edit:hover {
+  background: rgba(124, 58, 237, 0.15);
+  border-color: var(--color-accent);
+}
+
+/* Delete button — red on hover */
+.btn-delete:hover {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   12. EMPTY STATE
+   ────────────────────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  /* Hidden by default; JS adds/removes this class */
+}
+
+.empty-state.hidden {
+  display: none;
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  display: block;
+  animation: float 3s ease-in-out infinite;
+}
+
+.empty-state p {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   13. TASK FOOTER
+   ────────────────────────────────────────────────────────────── */
+.task-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.25rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border);
+  margin-top: 0.5rem;
+}
+
+/* Hide footer when there are no tasks */
+.task-footer.hidden {
+  display: none;
+}
+
+#items-left {
+  font-weight: 500;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   14. MODAL OVERLAY & DIALOG
+   ────────────────────────────────────────────────────────────── */
+
+/* Full-viewport backdrop */
+.modal-overlay {
+  position: fixed;
+  inset: 0;                         /* shorthand for top/right/bottom/left: 0 */
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+  /* Fade in animation */
+  animation: fadeIn 0.2s ease;
+}
+
+/* HTML `hidden` attribute: display: none — JS removes it to show the modal */
+.modal-overlay[hidden] {
+  display: none;
+}
+
+/* The modal card itself */
+.modal {
+  background: var(--bg-card);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow), 0 0 60px rgba(124, 58, 237, 0.2);
+  padding: 2rem;
+  width: 100%;
+  max-width: 420px;
+  animation: modalSlideUp 0.25s ease;
+}
+
+.modal h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 1.25rem;
+}
+
+/* Override flex: 1 inside the modal since there's no flex sibling */
+.modal .task-input {
+  margin-bottom: 1.25rem;
+  flex: unset;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.modal-actions .btn {
+  min-width: 90px;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   15. ANIMATIONS & KEYFRAMES
+   ────────────────────────────────────────────────────────────── */
+
+/* Task slide in from left when added */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Modal backdrop fade in */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Modal dialog slide up */
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Empty state emoji float */
+@keyframes float {
+  0%, 100% { transform: translateY(0);    }
+  50%       { transform: translateY(-8px); }
+}
+
+/* Task removal animation (applied via JS before removing the element) */
+.task-item.removing {
+  animation: slideOut 0.25s ease forwards;
+}
+
+@keyframes slideOut {
+  to {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   16. SCROLLBAR STYLING (WebKit-based browsers)
+   ────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   17. RESPONSIVE ADJUSTMENTS
+   ────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  body {
+    padding: 1rem 0.75rem 3rem;
+    align-items: flex-start;
+  }
+
+  .app-header h1 {
+    font-size: 2rem;
+  }
+
+  .modal {
+    padding: 1.5rem;
+  }
+
+  /* Always show task action buttons on touch devices (no hover) */
+  .task-actions {
+    opacity: 1;
+    transform: none;
+  }
+
+  .filter-btn {
+    font-size: 0.78rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   18. FOCUS VISIBLE (Keyboard Navigation)
+   Respect user preference for visible focus outlines.
+   ────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   19. REDUCED MOTION
+   Respect OS-level preference to reduce animations.
+   ────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

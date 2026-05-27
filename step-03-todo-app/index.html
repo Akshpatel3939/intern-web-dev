@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A full-featured To-Do List application demonstrating JavaScript state management, CRUD operations, and localStorage persistence." />
+  <meta name="author" content="Internship Project - Step 3" />
+
+  <title>To-Do App | Step 3 - JS Logic &amp; State Management</title>
+
+  <!-- Google Fonts: Inter (body) and Poppins (headings) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       STEP 3: JavaScript Logic & State Management
+       Key Concepts Demonstrated:
+         - CRUD (Create, Read, Update, Delete) on in-memory state
+         - localStorage persistence across page refreshes
+         - Event Delegation (one listener handles all task actions)
+         - Dynamic DOM rendering from state
+         - Filter logic (All / Active / Completed)
+         - Accessible modal dialog for editing tasks
+  ============================================================ -->
+
+  <div class="app-container">
+
+    <!-- ── Header ─────────────────────────────────────────── -->
+    <header class="app-header">
+      <h1>My Tasks</h1>
+      <!-- aria-live="polite" means screen readers will announce changes
+           to this element without interrupting the user -->
+      <p class="task-counter" id="task-counter" aria-live="polite">0 tasks remaining</p>
+    </header>
+
+    <main>
+
+      <!-- ── Add Task Form ──────────────────────────────────── -->
+      <!-- aria-label gives the form an accessible name for screen readers -->
+      <form
+        class="add-task-form"
+        id="add-task-form"
+        aria-label="Add new task"
+        novalidate
+      >
+        <input
+          type="text"
+          id="task-input"
+          class="task-input"
+          placeholder="Add a new task..."
+          aria-label="New task description"
+          autocomplete="off"
+          maxlength="100"
+          spellcheck="true"
+        />
+        <button
+          type="submit"
+          class="btn btn-add"
+          id="add-btn"
+          aria-label="Add task"
+          title="Add task"
+        >+</button>
+      </form>
+
+      <!-- ── Filter Bar ─────────────────────────────────────── -->
+      <!-- role="group" semantically groups the related filter buttons -->
+      <div class="filter-bar" role="group" aria-label="Filter tasks">
+        <button class="filter-btn active" data-filter="all"       id="filter-all">All</button>
+        <button class="filter-btn"        data-filter="active"    id="filter-active">Active</button>
+        <button class="filter-btn"        data-filter="completed" id="filter-completed">Completed</button>
+      </div>
+
+      <!-- ── Task List ──────────────────────────────────────── -->
+      <!-- Tasks are injected here dynamically by JavaScript.
+           role="list" re-asserts list semantics when CSS removes them. -->
+      <ul class="task-list" id="task-list" aria-label="Task list" role="list">
+        <!-- Tasks rendered by JavaScript -->
+      </ul>
+
+      <!-- ── Empty State ────────────────────────────────────── -->
+      <!-- aria-live="polite" so screen readers announce when it appears -->
+      <div class="empty-state" id="empty-state" aria-live="polite">
+        <div class="empty-icon" aria-hidden="true">📝</div>
+        <p>No tasks yet. Add one above!</p>
+      </div>
+
+      <!-- ── Footer Actions ─────────────────────────────────── -->
+      <div class="task-footer" id="task-footer">
+        <span id="items-left">0 items left</span>
+        <button
+          class="btn btn-clear"
+          id="clear-completed"
+          aria-label="Clear all completed tasks"
+        >Clear Completed</button>
+      </div>
+
+    </main>
+  </div><!-- /.app-container -->
+
+
+  <!-- ============================================================
+       EDIT MODAL
+       - role="dialog" + aria-modal="true" tells screen readers this
+         is a modal dialog that traps focus.
+       - `hidden` attribute hides it from both visual display and
+         the accessibility tree until JS removes it.
+  ============================================================ -->
+  <div
+    class="modal-overlay"
+    id="modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+    hidden
+  >
+    <div class="modal">
+      <h2 id="modal-title">Edit Task</h2>
+      <input
+        type="text"
+        id="edit-input"
+        class="task-input"
+        aria-label="Edit task description"
+        maxlength="100"
+      />
+      <div class="modal-actions">
+        <button class="btn btn-cancel" id="modal-cancel">Cancel</button>
+        <button class="btn btn-save"   id="modal-save">Save</button>
+      </div>
+    </div>
+  </div><!-- /#modal-overlay -->
+
+
+  <!-- App Logic (loaded at end of body so the DOM is ready) -->
+  <script src="js/app.js"></script>
+</body>
+</html>
